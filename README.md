@@ -3,26 +3,20 @@
 **Physics Undergraduate | Quantum Technologies | IIT Jodhpur**  
 Rank 2 • CGPA 8.12
 
----
-
 ### Recent Highlights ✨
-
 **Q-volution 2026 Quantum Hackathon**  
-- Best Overall Project Winner  
-- QAOA on Rigetti Ankaa-3 QPU (97.31% approximation ratio)
+• Best Overall Project Winner  
+• QAOA on Rigetti Ankaa-3 QPU (97.31% approximation ratio)
 
 **IBM Quantum Hardware**  
-- 156-qubit processor characterization (99.8% fidelity)  
-- Built real-time Python monitoring tools
+• 156-qubit processor characterization (99.8% fidelity)  
+• Built real-time Python monitoring tools
 
 **High-Performance Computing**  
-- C++20 quantum simulator (3.5× faster than Qiskit Aer)  
-- 40 GB/s bandwidth with SIMD optimization
-
----
+• C++20 quantum simulator (3.5× faster than Qiskit Aer)  
+• 40 GB/s bandwidth with SIMD optimization
 
 ### Technical Skills
-
 **Languages**  
 ![Python](https://img.shields.io/badge/Python-Expert-3776AB?style=flat-square&logo=python)  
 ![C++](https://img.shields.io/badge/C++20-Intermediate-00599C?style=flat-square&logo=c%2B%2B)  
@@ -34,9 +28,6 @@ Rank 2 • CGPA 8.12
 **Focus Areas**  
 Quantum Algorithms • NISQ Computing • Performance Optimization
 
----
-
 ### Connect
-
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=flat-square&logo=linkedin)](https://linkedin.com/in/priyansh-bhavsar-2b4b95260)  
 **Email:** b22ph005@iitj.ac.in
