@@ -5,24 +5,19 @@ Rank 2 • CGPA 8.12
 
 ---
 
-### About
-Final year B.S. Physics student at IIT Jodhpur specializing in Quantum Technologies. I work on quantum algorithms, hardware characterization, and high-performance quantum software.
-
----
-
 ### Recent Highlights ✨
 
 **Q-volution 2026 Quantum Hackathon**  
 - Best Overall Project Winner  
-- Implemented QAOA on Rigetti Ankaa-3 QPU achieving 97.31% approximation ratio
+- QAOA on Rigetti Ankaa-3 QPU (97.31% approximation ratio)
 
 **IBM Quantum Hardware**  
-- Characterized 156-qubit processor achieving 99.8% fidelity  
-- Built Python monitoring tools for real-time diagnostics
+- 156-qubit processor characterization (99.8% fidelity)  
+- Built real-time Python monitoring tools
 
 **High-Performance Computing**  
-- Quantum simulator in C++20 running 3.5× faster than Qiskit Aer  
-- 40GB/s bandwidth through SIMD optimization
+- C++20 quantum simulator (3.5× faster than Qiskit Aer)  
+- 40 GB/s bandwidth with SIMD optimization
 
 ---
 
@@ -31,7 +26,7 @@ Final year B.S. Physics student at IIT Jodhpur specializing in Quantum Technolog
 **Languages**  
 ![Python](https://img.shields.io/badge/Python-Expert-3776AB?style=flat-square&logo=python)  
 ![C++](https://img.shields.io/badge/C++20-Intermediate-00599C?style=flat-square&logo=c%2B%2B)  
-**SQL**
+![SQL](https://img.shields.io/badge/SQL-Advanced-4479A1?style=flat-square&logo=postgresql)
 
 **Quantum Frameworks**  
 **Qiskit** • **PennyLane** • **pyQuil**
