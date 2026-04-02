@@ -18,7 +18,7 @@ Rank 2 • CGPA 8.12
 
 ### Technical Skills
 **Languages**  
-![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python)  ![C++](https://img.shields.io/badge/C++20-00599C?style=flat-square&logo=c%2B%2B) ![SQL](https://img.shields.io/badge/SQL-4479A1?style=flat-square&logo=postgresql)
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python)                                           ![C++](https://img.shields.io/badge/C++20-00599C?style=flat-square&logo=c%2B%2B)                                              ![SQL](https://img.shields.io/badge/SQL-4479A1?style=flat-square&logo=postgresql)
 
 **Quantum Frameworks**  
 **Qiskit** • **PennyLane** • **pyQuil**
