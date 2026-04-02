@@ -1,9 +1,9 @@
-# Priyansh Bhavsar 👋
+# Priyansh Bhavsar 
 
 **Physics Undergraduate | Quantum Technologies | IIT Jodhpur**  
 Rank 2 • CGPA 8.12
 
-### Recent Highlights ✨
+### Recent Highlights 
 **Q-volution 2026 Quantum Hackathon**  
 • Best Overall Project Winner  
 • QAOA on Rigetti Ankaa-3 QPU (97.31% approximation ratio)
