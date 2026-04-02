@@ -3,12 +3,24 @@
 **Physics Undergraduate | Quantum Technologies | IIT Jodhpur**  
 Rank 2 • CGPA 8.12
 
-### Recent Highlights ✨
+### Recent Highlights
 
-| **🔥 Q-volution 2026** | **💻 IBM Quantum Hardware** | **⚡ High-Performance Computing** |
-|------------------------|-----------------------------|----------------------------------|
-| • Best Overall Project Winner | • 156-qubit processor characterization (99.8% fidelity) | • C++20 quantum simulator (3.5× faster than Qiskit Aer) |
-| • QAOA on Rigetti Ankaa-3 QPU (97.31%) | • Built real-time Python monitoring tools | • 40 GB/s bandwidth with SIMD optimization |
+<table>
+  <thead>
+    <tr>
+      <th style="background-color:#4A90E2; color:white; padding:8px;">Q-volution 2026</th>
+      <th style="background-color:#50C878; color:white; padding:8px;">IBM Quantum Hardware</th>
+      <th style="background-color:#FF6B6B; color:white; padding:8px;">High-Performance Computing</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>• Best Overall Project Winner<br>• QAOA on Rigetti Ankaa-3 QPU (97.31% approximation ratio)</td>
+      <td>• 156-qubit processor characterization (99.8% fidelity)<br>• Built real-time Python monitoring tools</td>
+      <td>• C++20 quantum simulator (3.5× faster than Qiskit Aer)<br>• 40 GB/s bandwidth with SIMD optimization</td>
+    </tr>
+  </tbody>
+</table>
 
 ### Technical Skills
 **Languages**  
