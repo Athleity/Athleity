@@ -5,9 +5,10 @@ Rank 2 • CGPA 8.12
 
 ### Recent Highlights ✨
 
-| **Q-volution 2026** | **IBM Quantum Hardware** | **High-Performance Computing** |
-|---------------------|---------------------------|--------------------------------|
-| • Best Overall Project Winner<br>• QAOA on Rigetti Ankaa-3 QPU (97.31%) | • 156-qubit processor characterization (99.8% fidelity)<br>• Built real-time Python monitoring tools | • C++20 quantum simulator (3.5× faster than Qiskit Aer)<br>• 40 GB/s bandwidth with SIMD optimization |
+| **Q-volution 2026** 🔥 | **IBM Quantum Hardware** 💻 | **High-Performance Computing** ⚡ |
+|------------------------|-----------------------------|----------------------------------|
+| • Best Overall Project Winner | • 156-qubit processor characterization (99.8% fidelity) | • C++20 quantum simulator (3.5× faster than Qiskit Aer) |
+| • QAOA on Rigetti Ankaa-3 QPU (97.31%) | • Built real-time Python monitoring tools | • 40 GB/s bandwidth with SIMD optimization |
 
 ### Technical Skills
 **Languages**  
