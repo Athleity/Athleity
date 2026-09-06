@@ -1,16 +1,17 @@
-# Priyansh Bhavsar 👋
+# Priyansh Bhavsar 
 
 **Physics Undergraduate | Quantum Technologies | IIT Jodhpur**  
 **Rank 2 • CGPA 8.12**
 
-### Recent Highlights ✨
+### Recent Highlights 
 
-| **🔥 Q-volution 2026** | **💻 IBM Quantum Hardware** | **⚡ High-Performance Computing** |
+| ** Q-volution 2026** | ** IBM Quantum Hardware** | ** High-Performance Computing** |
 |------------------------|-----------------------------|----------------------------------|
 | • Best Overall Project Winner | • 133-qubit characterization (99.8%) | • C++20 simulator (3.5× Qiskit Aer) |
 | • QAOA on Rigetti Ankaa-3 (97.31%) | • Real-time Python monitoring | • 40 GB/s SIMD bandwidth |
 
 ### Technical Skills 🛠️
+
 
 | **Languages** | **Quantum Frameworks** | **Performance** |
 |---------------|----------------------|---------------|
