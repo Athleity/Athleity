@@ -10,7 +10,7 @@
 | • Best Overall Project Winner | • 133-qubit characterization (99.8%) | • C++20 simulator (3.5× Qiskit Aer) |
 | • QAOA on Rigetti Ankaa-3 (97.31%) | • Real-time Python monitoring | • 40 GB/s SIMD bandwidth |
 
-### Technical Skills 🛠️
+### Technical Skills 
 
 
 | **Languages** | **Quantum Frameworks** | **Performance** |
