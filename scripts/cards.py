@@ -208,33 +208,45 @@ def cat_shape(sc):
             '<line x1="4" y1="-12" x2="12" y2="-9"/></g></g>')
 
 
-def surf_hero(x0=30, x1=545, base=130, amp=5, hw=110, sc=.85, dur=CYCLE, M=60, step=6):
-    """One green line that never disappears. ONE wide, gentle bump rides left to right carrying the cat; the bump
-    then settles back into the flat line while the cat fades out slowly. Every frame is a full-width path with
-    exactly one bump (the path itself is animated), same T=.62 measurement as the Bloch sphere."""
+def surf_hero(x0=30, x1=590, base=130, amp=9, hw=95, sc=.85, dur=CYCLE, M=60, step=6):
+    """Schroedinger's cat. One green line; ONE bump carries the cat right to a box next to the Bloch sphere.
+    The cat rides into the box, the bump settles flat, at T=.62 the box is 'measured' (opens, empty) and closes;
+    then the cat comes again from the left. Same T=.62 measurement as the Bloch sphere."""
     sm = lambda e: (lambda q: q * q * (3 - 2 * q))(min(1, max(0, e)))
-    cx = lambda t: x0 + (x1 - 50 - x0) * sm((t - .10) / .52)                 # bump centre: enters at .10, parked at .62
-    env = lambda t: sm((t - .10) / .08) * (1 - sm((t - .56) / .10))          # bump height: rises, holds, flattens
+    bx, bw, bt = x1, 52, 92                                                    # box: left edge, width, top
+    mid = bx + bw / 2
+    catx = lambda t: x0 + (mid - x0) * sm((t - .10) / .46)                    # cat enters the box at ~.56
+    cx = lambda t: min(catx(t), x1 - 30)                                       # bump centre stops short of the box
+    env = lambda t: sm((t - .10) / .08) * (1 - sm((t - .58) / .10))           # bump: rises, holds, flattens
     xs = list(range(x0, x1 + 1, step))
     if xs[-1] != x1:
         xs.append(x1)
-    frames, cat_xy, kts = [], [], []
+    frames, cat_xy, cat_op, kts = [], [], [], []
     for k in range(M + 1):
         t = k / M
-        c, e = cx(t), env(t)
-        y = lambda x: base - (amp * e * (1 + math.cos(math.pi * (x - c) / hw)) / 2 if abs(x - c) < hw else 0)
-        frames.append("M" + " L".join(f"{x} {y(x):.2f}" for x in xs))
-        cat_xy.append(f"{c:.1f} {y(c) - 1:.2f}")
+        c, e, p = cx(t), env(t), catx(t)
+        h = lambda x: amp * e * (1 + math.cos(math.pi * (x - c) / hw)) / 2 if abs(x - c) < hw else 0
+        frames.append("M" + " L".join(f"{x} {base - h(x):.2f}" for x in xs))
+        cat_xy.append(f"{p:.1f} {base - h(p) - 1:.2f}")
+        cat_op.append(f"{sm((t - .12) / .08) * (1 - sm((t - .57) / .02)):.3f}")  # fades in on the left, hidden inside the box
         kts.append(f"{t:.4f}")
-    kt = ";".join(kts)
-    cat_op = ";".join(f"{(lambda t: sm((t - .14) / .08) * (1 - sm((t - .46) / .26)))(k / M):.3f}" for k in range(M + 1))
+    kt, rep = ";".join(kts), f'dur="{dur}s" repeatCount="indefinite"'
     line = (f'<path d="{frames[0]}" fill="none" stroke="var(--ac)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'
-            f'<animate attributeName="d" values="{";".join(frames)}" keyTimes="{kt}" dur="{dur}s" repeatCount="indefinite"/></path>')
-    cat = (f'<g opacity="0"><animateTransform attributeName="transform" type="translate" values="{";".join(cat_xy)}" keyTimes="{kt}" dur="{dur}s" repeatCount="indefinite"/>'
-           f'<animate attributeName="opacity" values="{cat_op}" keyTimes="{kt}" dur="{dur}s" repeatCount="indefinite"/>'
+            f'<animate attributeName="d" values="{";".join(frames)}" keyTimes="{kt}" {rep}/></path>')
+    cat = (f'<g opacity="0"><animateTransform attributeName="transform" type="translate" values="{";".join(cat_xy)}" keyTimes="{kt}" {rep}/>'
+           f'<animate attributeName="opacity" values="{";".join(cat_op)}" keyTimes="{kt}" {rep}/>'
            f'<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -1.2;0 0" dur="1.4s" repeatCount="indefinite"/>'
            f'{cat_shape(sc)}</g></g>')
-    return line + cat
+    # the box is drawn over the cat, so the cat vanishes into it; at measurement the front turns see-through (empty), then closes
+    ko = "0;.61;.64;.72;.78;1"
+    box = (f'<rect x="{bx}" y="{bt}" width="{bw}" height="{base+2-bt}" rx="4" fill="var(--bg)" stroke="var(--ac)" stroke-width="1.8">'
+           f'<animate attributeName="fill-opacity" values="1;1;0;0;1;1" keyTimes="{ko}" {rep}/></rect>'
+           f'<text class="mono" x="{mid}" y="{bt+27}" text-anchor="middle" style="font-size:20px;font-weight:700;fill:var(--ac)">?'
+           f'<animate attributeName="opacity" values="1;1;0;0;1;1" keyTimes="{ko}" {rep}/></text>'
+           f'<circle cx="{mid}" cy="{bt+19}" fill="none" stroke="var(--ac)">'
+           f'<animate attributeName="r" values="4;4;4;30;30" keyTimes="0;.619;.62;.72;1" {rep}/>'
+           f'<animate attributeName="stroke-opacity" values="0;0;.8;0;0" keyTimes="0;.619;.62;.72;1" {rep}/></circle>')
+    return line + cat + box
 
 
 def bloch(cx=705, cy=72, r=42, dur=CYCLE):
