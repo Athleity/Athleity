@@ -30,7 +30,9 @@ text{{font-family:{FONT}}}
 @media (prefers-reduced-motion:reduce){{*{{animation:none!important}}.line{{opacity:0}}.line.f{{opacity:1}}}}
 """
 DEFS = ('<defs><radialGradient id="sph" cx=".38" cy=".32" r=".8"><stop offset="0" style="stop-color:var(--ac);stop-opacity:.18"/>'
-        '<stop offset="1" style="stop-color:var(--ac);stop-opacity:.02"/></radialGradient></defs>')
+        '<stop offset="1" style="stop-color:var(--ac);stop-opacity:.02"/></radialGradient>'
+        '<linearGradient id="scan" x1="0" y1="0" x2="1" y2="0"><stop offset="0" style="stop-color:var(--ac);stop-opacity:0"/>'
+        '<stop offset="1" style="stop-color:var(--ac);stop-opacity:.35"/></linearGradient></defs>')
 
 QUERY = """
 query($login:String!){user(login:$login){
@@ -70,6 +72,26 @@ def fetch():
     if "errors" in data:
         sys.exit(json.dumps(data["errors"]))
     return data["data"]["user"]
+
+
+def empty_data():
+    today = datetime.date.today()
+    start = today - datetime.timedelta(days=today.weekday() + 1 + 52 * 7)
+    weeks = [{"contributionDays": [{"date": (start + datetime.timedelta(days=w * 7 + d)).isoformat(), "weekday": d,
+                                    "contributionCount": 0}
+                                   for d in range(7) if start + datetime.timedelta(days=w * 7 + d) <= today]} for w in range(53)]
+    return {"contributionsCollection": {"totalCommitContributions": 0, "totalPullRequestContributions": 0,
+            "totalIssueContributions": 0, "totalPullRequestReviewContributions": 0,
+            "contributionCalendar": {"totalContributions": 0, "weeks": weeks}}}
+
+
+def safe_fetch():
+    try:
+        return fetch()
+    except BaseException as e:
+        print(f"::warning::GitHub API call failed ({e}). Check that the GH_TOKEN secret is set in the workflow. "
+              "Writing cards with an empty heatmap.", file=sys.stderr)
+        return empty_data()
 
 
 def repo_rows(name):
@@ -133,7 +155,7 @@ def streaks(days):
 
 def c_heatmap(u, WW=540, h=152):
     cal = u["contributionsCollection"]["contributionCalendar"]
-    weeks, n = cal["weeks"], len(cal["weeks"])
+    weeks, n = cal["weeks"], max(1, len(cal["weeks"]))
     pitch = (WW - 36) / n
     cs = pitch - 2
     mx = max((d["contributionCount"] for d in days_of(u)), default=0) or 1
@@ -151,12 +173,15 @@ def c_heatmap(u, WW=540, h=152):
             last_m = m
     grid = "".join(f'<rect class="{c}" x="{x:.1f}" y="{y:.1f}" width="{cs:.1f}" height="{cs:.1f}" rx="2" '
                    f'/>' for c, x, y, i in cells)
+    ph = 7 * pitch + 4
+    scan = (f'<rect x="14" y="34" width="34" height="{ph:.0f}" fill="url(#scan)">'
+            f'<animate attributeName="x" values="14;{WW-48}" dur="7s" repeatCount="indefinite"/></rect>')
     x0 = WW - 120
     legend = (f'<text class="s" x="{x0-6}" y="145" text-anchor="end">Less</text>'
               + "".join(f'<rect class="l{k}" x="{x0+k*13}" y="137" width="10" height="10" rx="2"/>' for k in range(5))
               + f'<text class="s" x="{x0+69}" y="145">More</text>')
     foot = f'<text class="s" x="18" y="145" style="font-size:11px">{num(cal["totalContributions"])} contributions in the last year</text>'
-    return card("Contributions", grid + labels + foot + legend + surf(225, 385, 142, 3.2, 40, .55, 7), WW, h, 0)
+    return card("Contributions", grid + scan + labels + foot + legend + surf(225, 385, 142, 3.2, 40, .55, 7), WW, h, 0)
 
 
 def c_streaks(u, w=270, h=152):
@@ -242,7 +267,7 @@ def stack():
 
 
 def main():
-    u = fetch()
+    u = safe_fetch()
     os.makedirs(OUT, exist_ok=True)
     cards = {
         "hero": hero(), "stack": stack(), "heatmap": c_heatmap(u), "streaks": c_streaks(u),
