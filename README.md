@@ -18,17 +18,12 @@
 
 <br/>
 
-```python
-class PriyanshBhavsar:
-    """BS Physics, Quantum Technologies — IIT Jodhpur"""
+**Priyansh Bhavsar** — BS Physics, Quantum Technologies, IIT Jodhpur
 
-    def philosophy(self) -> list[str]:
-        return [
-            "translate algorithms into code that survives real hardware noise",
-            "build the tool from scratch when the black box stops being trustworthy",
-            "treat a strange result as a question, not an error to discard",
-        ]
-```
+My philosophy:
+- Translate algorithms into code that survives real hardware noise
+- Build the tool from scratch when the black box stops being trustworthy
+- Treat a strange result as a question, not an error to discard
 
 <br/>
 
