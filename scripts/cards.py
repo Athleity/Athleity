@@ -197,8 +197,20 @@ CYCLE = 17.2  # seconds; the sea, the cat and the Bloch sphere all share this on
 # timeline as fractions of the loop: wave starts, bump fully up, cat reaches box, measurement starts, measurement ends
 W0, W1, ARR, MEAS, MEND = .09, .16, .50, .56, .92
 
+# Surfboard in cat-local coordinates (the cat stands on y=0). Side view of a shortboard:
+# rounded tail, rocker that lifts the nose, pointed nose tip, stringer, wax patch and a thruster fin set.
+BOARD = (
+    '<path d="M-6 3 C-7 5.5 -10 7.6 -13.5 8 C-12.2 6 -11.6 4.5 -11.4 2.8 Z" class="acc" stroke="var(--bg)" stroke-width=".6" stroke-linejoin="round"/>'   # rear fin
+    '<path d="M-14.5 2.9 C-15 4.8 -16.6 6.2 -19 6.8 C-18.4 5.4 -18.2 4.2 -18.4 2.8 Z" class="acc" stroke="var(--bg)" stroke-width=".6" stroke-linejoin="round"/>'  # tail fin
+    '<path class="acc" stroke="var(--bg)" stroke-width=".9" stroke-linejoin="round" '
+    'd="M-25 -.6 C-24.6 -2 -22 -2.7 -16 -2.8 C-6 -3.1 10 -3.1 20 -3.6 C25 -3.9 28.5 -5 30.5 -7.4 '
+    'C29.6 -2.6 25 1.6 17 2.6 C6 3.7 -10 3.5 -20 2.6 C-23.6 2.2 -25.4 1.2 -25 -.6 Z"/>'                                   # hull
+    '<path d="M-23 -.6 C-8 -1.4 12 -1.6 27.5 -6" fill="none" stroke="var(--bg)" stroke-width=".7" stroke-opacity=".75" stroke-linecap="round"/>'  # stringer
+    '<path d="M-6 -2.2 C-3 -2.5 3 -2.5 6 -2.2" fill="none" stroke="var(--bg)" stroke-width=".7" stroke-opacity=".6" stroke-linecap="round"/>'    # wax mark under the cat
+)
 
-def cat_shape(sc):
+
+def cat_shape(sc, board_anim=''):
     return (f'<g transform="scale({sc})">'
             '<path d="M-6 -9 C-15 -9 -15 -21 -9 -23" fill="none" stroke="var(--ac)" stroke-width="2.2" stroke-linecap="round">'
             '<animateTransform attributeName="transform" type="rotate" values="-8 -6 -9;10 -6 -9;-8 -6 -9" dur="1.6s" repeatCount="indefinite"/></path>'
@@ -207,46 +219,55 @@ def cat_shape(sc):
             '<circle class="acc" cx="6" cy="-20" r="5.4"/><circle cx="7.6" cy="-20.6" r="1" fill="var(--bg)"/>'
             '<g stroke="var(--ac)" stroke-width="2" stroke-linecap="round"><line x1="-3" y1="-13" x2="-11" y2="-17"/>'
             '<line x1="4" y1="-12" x2="12" y2="-9"/></g>'
-            # surfboard: pointed nose, slightly curved deck, centre stringer and two fins under the tail
-            '<polygon class="acc" points="-13,2.2 -9.6,2.5 -12.6,6" /><polygon class="acc" points="-8.4,2.7 -5.6,2.8 -8,5.6"/>'
-            '<path class="acc" d="M-17 -1 C-8 -3.4 8 -3.4 19 -2 C10 3.2 -8 3.4 -14 2.5 C-16.6 2.1 -17.6 0.4 -17 -1 Z" stroke="var(--bg)" stroke-width=".9" stroke-linejoin="round"/>'
-            '<path d="M-14.5 -.2 C-5 -1.2 8 -1.2 16 -1.6" fill="none" stroke="var(--bg)" stroke-width=".7" stroke-opacity=".7"/></g>')
+            f'<g>{board_anim}{BOARD}</g></g>')
 
 
-def surf_hero(x0=30, x1=602, base=131, amp=8, hw=62, sc=.80, dur=CYCLE, M=72, step=5, bw=38, bh=38):
-    """Schroedinger's cat. One green line; ONE curved bump carries the cat to a square open box next to the Bloch
+def surf_hero(x0=2, x1=602, base=131, amp=12, hw=44, hf=50, sc=.80, dur=CYCLE, M=360, step=8, bw=38, bh=38, LEAN=1.0):
+    """Schroedinger's cat. One green line; ONE curved bump, kicked up by the cat's landing, carries the cat to a square open box next to the Bloch
     sphere. The cat steps in (ears and head stay visible) and a '?' appears. At MEAS (same moment as the Bloch
     sphere) the '?' goes, the box glows (measurement) and the cat slowly sinks and vanishes. Then a short rest, and
     the cat steps out of a portal before the wave, lands on its start, the portal closes, and the bump rises under it."""
     sm = lambda e: (lambda q: q * q * (3 - 2 * q))(min(1, max(0, e)))
     bx, top, o = x1, 95, 6                                                     # box front-left corner, wall top, 3D offset
     mid = bx + bw / 2 + o / 2
-    E0, PX, LX = .04, 20, x0 + 4                                               # cat leaves the portal at x=PX, lands at the wave's start LX
+    E0, PX, LX = .04, 20, 52                                              # cat leaves the portal at x=PX, lands so the board tail sits at the wave's start (x0)
     u_in = lambda t: min(1, max(0, (t - E0) / (W0 - E0)))
     catx = lambda t: (PX - 12 + (LX - PX + 12) * sm(u_in(t))) if t < W0 else LX + (mid - LX) * sm((t - W0) / (ARR - W0))
-    cx = lambda t: min(catx(t), x1 - 30)                                       # bump centre stops short of the box
-    env = lambda t: sm((t - W0) / (W1 - W0)) * (1 - sm((t - ARR - .02) / .10)) # bump: rises, holds, flattens
+    CO = 6                                                                     # crest sits only just behind the cat, so it rides near the middle of the wave
+    EXT = x1 + hw + 2 - (mid - CO)                                             # extra travel so the whole wave runs into the box
+    crest = lambda t: catx(t) - CO + EXT * sm((t - ARR + .10) / .28)          # rides behind the surfer, then carries on into the box
+    env = lambda t: sm((t - W0) / (W1 - W0))                                   # bump rises once and keeps its shape until it is gone
     xs = list(range(x0, x1 + 1, step))
     if xs[-1] != x1:
         xs.append(x1)
-    frames, cat_xy, cat_op, kts = [], [], [], []
+    frames, cat_xy, cat_op, brd_op, kts = [], [], [], [], []
     for k in range(M + 1):
         t = k / M
-        c, e, p = cx(t), env(t), catx(t)
-        h = lambda x: amp * e * (1 + math.cos(math.pi * (x - c) / hw)) / 2 if abs(x - c) < hw else 0
-        frames.append("M" + " L".join(f"{x} {base - h(x):.2f}" for x in xs))
+        pk, e, p = crest(t), env(t), catx(t)
+        hit = 5.5 * math.sin(math.pi * min(1, max(0, (t - W0 + .01) / .07)))   # the landing presses the line down, then it springs up
+        def bump(x):
+            return (amp * e * (1 + math.cos(math.pi * (pk - x) / hw)) / 2 if pk - hw < x <= pk       # back slope
+                    else amp * e * (1 + math.cos(math.pi * (x - pk) / hf)) / 2 if pk < x < pk + hf else 0)  # front slope
+        h = lambda x: bump(x) - hit * math.exp(-((x - LX) / 20) ** 2)
+        # lean: the higher a point of the wave, the further it is pushed toward the surfer, so the crest curls forward
+        frames.append("M" + " L".join(f"{min(x1, x + LEAN * bump(x)):.1f} {base - h(x):.1f}" for x in xs))
+        xc = p
+        for _ in range(8):                                                     # find the point of the wave that sits under the cat
+            xc = p - LEAN * bump(xc)
         g = sm((p - (bx - 14)) / (mid - (bx - 14)))                            # 0 on the wave -> 1 inside the box
         y_in = top + 11 + 14 * sm((t - MEAS) / .16)                            # head and ears above the wall; sinks after measurement
-        cat_xy.append(f"{p:.1f} {(base - h(p) - 1 - (32 * u_in(t) * (1 - u_in(t)) if t < W0 else 0)) * (1 - g) + y_in * g:.2f}")
+        cat_xy.append(f"{p:.1f} {(base - h(xc) - 1 - (32 * u_in(t) * (1 - u_in(t)) if t < W0 else 0)) * (1 - g) + y_in * g:.2f}")
+        brd_op.append(f"{1 - sm(g / .6):.3f}")                                 # board fades before the nose could poke out of the box
         cat_op.append(f"{sm((t - E0 + .005) / .01) * (1 - sm((t - MEAS) / .16)):.3f}")
         kts.append(f"{t:.4f}")
     kt, rep = ";".join(kts), f'dur="{dur}s" repeatCount="indefinite"'
-    line = (f'<path d="{frames[0]}" fill="none" stroke="var(--ac)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'
-            f'<animate attributeName="d" values="{";".join(frames)}" keyTimes="{kt}" {rep}/></path>')
-    cat = (f'<g clip-path="url(#emerge)"><g opacity="0"><animateTransform attributeName="transform" type="translate" values="{";".join(cat_xy)}" keyTimes="{kt}" {rep}/>'
-           f'<animate attributeName="opacity" values="{";".join(cat_op)}" keyTimes="{kt}" {rep}/>'
-           f'<g filter="url(#unc)"><animateTransform attributeName="transform" type="translate" values="0 0;0 -1.2;0 0" dur="1.4s" repeatCount="indefinite"/>'
-           f'{cat_shape(sc)}</g></g></g>')
+    line = (f'<path d="{frames[0]}" shape-rendering="geometricPrecision" fill="none" stroke="var(--ac)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'
+            f'<animate attributeName="d" values="{";".join(frames)}" {rep}/></path>')
+    board_anim = f'<animate attributeName="opacity" values="{";".join(brd_op)}" {rep}/>'
+    cat = (f'<g clip-path="url(#emerge)"><g opacity="0"><animateTransform attributeName="transform" type="translate" values="{";".join(cat_xy)}" {rep}/>'
+           f'<animate attributeName="opacity" values="{";".join(cat_op)}" {rep}/>'
+           f'<g filter="url(#unc)"><animate attributeName="filter" values="url(#unc);none" keyTimes="0;{W0+.002:.3f}" calcMode="discrete" {rep}/><animateTransform attributeName="transform" type="translate" values="0 0;0 -1.2;0 0" dur="1.4s" repeatCount="indefinite"/>'
+           f'{cat_shape(sc, board_anim)}</g></g></g>')
     cy, ra, rb = base - 13, 8, 17
     defs = (f'<defs><clipPath id="emerge"><rect x="{PX}" y="70" width="800" height="70"/></clipPath>'
             f'<filter id="unc" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="0">'
@@ -255,8 +276,6 @@ def surf_hero(x0=30, x1=602, base=131, amp=8, hw=62, sc=.80, dur=CYCLE, M=72, st
             f'<radialGradient id="pg"><stop offset="0" style="stop-color:var(--ac);stop-opacity:.35"/>'
             f'<stop offset=".6" style="stop-color:var(--ac);stop-opacity:.12"/><stop offset="1" style="stop-color:var(--ac);stop-opacity:.03"/></radialGradient></defs>')
     # the portal sits before the wave: it snaps open with a small overshoot, glows and swirls while the cat steps out, then collapses
-    sp = f"M{ra+4} 0 A{ra+4} {rb+4} 0 1 1 {-(ra+4)} 0 A{ra+4} {rb+4} 0 1 1 {ra+4} 0"
-    sparks = "".join(f'<circle r="1.1" fill="var(--ac)"><animateMotion dur="1.8s" begin="{-i*.6:.1f}s" repeatCount="indefinite" path="{sp}"/></circle>' for i in range(0))
     swirl = "".join(f'<ellipse rx="{ra*k:.1f}" ry="{rb*k:.1f}" fill="none" stroke="var(--ac)" stroke-width="1.2" stroke-opacity="{o_}" stroke-dasharray="{d}">'
                      f'<animate attributeName="stroke-dashoffset" values="0;{v}" dur="{t_}s" repeatCount="indefinite"/></ellipse>'
                      for k, o_, d, v, t_ in ((.6, .55, "4 4", -18, 1.1),))
@@ -266,7 +285,7 @@ def surf_hero(x0=30, x1=602, base=131, amp=8, hw=62, sc=.80, dur=CYCLE, M=72, st
               f'<ellipse rx="{ra}" ry="{rb}" fill="url(#pg)"/>{swirl}'
               f'<ellipse rx="{ra}" ry="{rb}" fill="none" stroke="var(--ac)" stroke-width="1.8"/>'
               f'<ellipse rx="2" ry="6" fill="var(--ac)"><animate attributeName="fill-opacity" values=".25;.6;.25" dur=".7s" repeatCount="indefinite"/></ellipse>'
-              f'{sparks}</g></g>')
+              f'</g></g>')
     st = 'stroke="var(--ac)" stroke-width="1.5" stroke-linejoin="round" stroke-opacity=".9"'
     back = (f'<rect x="{bx+o}" y="{top-o}" width="{bw}" height="{bh}" rx="3" fill="#161b22" {st}>'
             f'<animate attributeName="fill" values="#161b22;#161b22;#0e4429;#0e4429;#161b22;#161b22" '
@@ -274,7 +293,7 @@ def surf_hero(x0=30, x1=602, base=131, amp=8, hw=62, sc=.80, dur=CYCLE, M=72, st
             f'<line x1="{bx}" y1="{top}" x2="{bx+o}" y2="{top-o}" {st}/>'
             f'<polygon points="{bx+bw},{top} {bx+bw+o},{top-o} {bx+bw+o},{top+bh-o} {bx+bw},{top+bh}" fill="var(--bg)" {st}/>')
     front = f'<rect x="{bx}" y="{top}" width="{bw}" height="{bh}" rx="3" fill="var(--bg)" {st}/>'
-    mark = (f'<text class="mono" x="{bx+bw/2:.1f}" y="{top+28}" text-anchor="middle" style="font-size:25px;font-weight:700;fill:var(--ac)">?'
+    mark = (f'<text class="mono" x="{bx+bw/2:.1f}" y="{top+31}" text-anchor="middle" style="font-size:32px;font-weight:700;fill:var(--ac)">?'
             f'<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;{ARR-.03:.3f};{ARR+.01:.3f};{MEAS-.005:.3f};{MEAS+.005:.3f};1" {rep}/></text>')
     ring = lambda s: (f'<circle cx="{bx+bw/2+o/2:.1f}" cy="{top+bh/2-o/2:.1f}" fill="none" stroke="var(--ac)">'
                       f'<animate attributeName="r" values="6;6;6;34;34" keyTimes="0;{s-.001:.3f};{s:.3f};{s+.10:.3f};1" {rep}/>'
@@ -284,7 +303,7 @@ def surf_hero(x0=30, x1=602, base=131, amp=8, hw=62, sc=.80, dur=CYCLE, M=72, st
 
 def bloch(cx=705, cy=72, r=42, dur=CYCLE):
     """Precessing state vector. At T=.62 it is measured: snaps to |0>, rests there, then is re-prepared."""
-    th0, M = math.radians(55), 112
+    th0, M = math.radians(55), 360
     ease = lambda e: e * e * (3 - 2 * e)
     pts = []
     for k in range(M + 1):
@@ -301,8 +320,8 @@ def bloch(cx=705, cy=72, r=42, dur=CYCLE):
             th, ph = 0, 0
         pts.append((cx + r * math.sin(th) * math.cos(ph), cy - r * math.cos(th) + r * .3 * math.sin(th) * math.sin(ph)))
     keys = ";".join(f"{k/M:.4f}" for k in range(M + 1))
-    anim = lambda attr, a: (f'<animate attributeName="{attr}" values="{";".join(f"{p[a]:.1f}" for p in pts)}" '
-                            f'keyTimes="{keys}" dur="{dur}s" repeatCount="indefinite"/>')
+    anim = lambda attr, a: (f'<animate attributeName="{attr}" values="{";".join(f"{p[a]:.2f}" for p in pts)}" '
+                            f'dur="{dur}s" repeatCount="indefinite"/>')
     rx, oy = r * math.sin(th0), -r * math.cos(th0)
     return (f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="url(#sph)" stroke="var(--ac)" stroke-opacity=".55"/>'
             f'<ellipse cx="{cx}" cy="{cy}" rx="{r}" ry="{r*.3:.1f}" fill="none" stroke="var(--bd)"/>'
@@ -328,7 +347,7 @@ def hero():
              "Lightning-Lite: C++20 statevector simulator, 3.5x vs Qiskit Aer",
              "Now: surface-code quantum error correction",
              "Translating papers into working code"]
-    tl = "".join(f'<text class="mono line{" f" if i == 0 else ""}" x="30" y="90" font-size="13" fill="var(--fg)" '
+    tl = "".join(f'<text class="mono line{" f" if i == 0 else ""}" x="30" y="85" font-size="13" fill="var(--fg)" '
                  f'style="animation-delay:{i*4}s"><tspan class="acc">›</tspan> {esc(t)}</text>'
                  for i, t in enumerate(lines))
     return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}"><style>{CSS}</style>{DEFS}'
