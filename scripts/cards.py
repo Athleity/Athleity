@@ -208,26 +208,33 @@ def cat_shape(sc):
             '<line x1="4" y1="-12" x2="12" y2="-9"/></g></g>')
 
 
-def surf_hero(x0=30, x1=545, base=130, amp=5, hw=85, sc=.85, dur=CYCLE):
-    """Always-on green line. ONE gentle hump rides in from the left carrying the cat, the cat fades out slowly
-    near the right, and the hump flattens into the line (same T=.62 measurement as the Bloch sphere)."""
-    xa, xb = x0 - hw, x1 - 40                       # hump centre travels from just off the left edge to the right
-    d = "M" + " L".join(f"{x} {-amp * (1 + math.cos(math.pi * x / hw)) / 2:.2f}" for x in range(-hw, hw + 1, 5))
-    kt = "0;.10;.62;1"
-    clip = f'<defs><clipPath id="sea"><rect x="{x0}" y="{base-30}" width="{x1-x0}" height="40"/></clipPath></defs>'
-    flat = f'<line x1="{x0}" y1="{base}" x2="{x1}" y2="{base}" stroke="var(--ac)" stroke-width="1.8" stroke-linecap="round"/>'
-    sk = "0;.10;.16;.58;.66;1"                      # hump height: flat, rises, holds, flattens, flat
-    wave = (f'<g clip-path="url(#sea)"><g transform="translate(0 {base})"><g>'
-            f'<animateTransform attributeName="transform" type="translate" values="{xa} 0;{xa} 0;{xb} 0;{xb} 0" keyTimes="{kt}" dur="{dur}s" repeatCount="indefinite"/>'
-            f'<g><animateTransform attributeName="transform" type="scale" values="1 0;1 0;1 1;1 1;1 0;1 0" keyTimes="{sk}" dur="{dur}s" repeatCount="indefinite"/>'
-            f'<path d="{d}" fill="none" stroke="var(--ac)" stroke-width="1.8" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>'
-            f'</g></g></g></g>')
-    cat = (f'<g><animateTransform attributeName="transform" type="translate" values="{xa} 0;{xa} 0;{xb} 0;{xb} 0" keyTimes="{kt}" dur="{dur}s" repeatCount="indefinite"/>'
-           f'<g><animateTransform attributeName="transform" type="translate" values="0 {base-1};0 {base-1};0 {base-1-amp};0 {base-1-amp};0 {base-1};0 {base-1}" keyTimes="{sk}" dur="{dur}s" repeatCount="indefinite"/>'
+def surf_hero(x0=30, x1=545, base=130, amp=5, hw=110, sc=.85, dur=CYCLE, M=60, step=6):
+    """One green line that never disappears. ONE wide, gentle bump rides left to right carrying the cat; the bump
+    then settles back into the flat line while the cat fades out slowly. Every frame is a full-width path with
+    exactly one bump (the path itself is animated), same T=.62 measurement as the Bloch sphere."""
+    sm = lambda e: (lambda q: q * q * (3 - 2 * q))(min(1, max(0, e)))
+    cx = lambda t: x0 + (x1 - 50 - x0) * sm((t - .10) / .52)                 # bump centre: enters at .10, parked at .62
+    env = lambda t: sm((t - .10) / .08) * (1 - sm((t - .56) / .10))          # bump height: rises, holds, flattens
+    xs = list(range(x0, x1 + 1, step))
+    if xs[-1] != x1:
+        xs.append(x1)
+    frames, cat_xy, kts = [], [], []
+    for k in range(M + 1):
+        t = k / M
+        c, e = cx(t), env(t)
+        y = lambda x: base - (amp * e * (1 + math.cos(math.pi * (x - c) / hw)) / 2 if abs(x - c) < hw else 0)
+        frames.append("M" + " L".join(f"{x} {y(x):.2f}" for x in xs))
+        cat_xy.append(f"{c:.1f} {y(c) - 1:.2f}")
+        kts.append(f"{t:.4f}")
+    kt = ";".join(kts)
+    cat_op = ";".join(f"{(lambda t: sm((t - .14) / .08) * (1 - sm((t - .46) / .26)))(k / M):.3f}" for k in range(M + 1))
+    line = (f'<path d="{frames[0]}" fill="none" stroke="var(--ac)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'
+            f'<animate attributeName="d" values="{";".join(frames)}" keyTimes="{kt}" dur="{dur}s" repeatCount="indefinite"/></path>')
+    cat = (f'<g opacity="0"><animateTransform attributeName="transform" type="translate" values="{";".join(cat_xy)}" keyTimes="{kt}" dur="{dur}s" repeatCount="indefinite"/>'
+           f'<animate attributeName="opacity" values="{cat_op}" keyTimes="{kt}" dur="{dur}s" repeatCount="indefinite"/>'
            f'<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -1.2;0 0" dur="1.4s" repeatCount="indefinite"/>'
-           f'<g><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.16;.24;.50;.66;1" dur="{dur}s" repeatCount="indefinite"/>'
-           f'{cat_shape(sc)}</g></g></g></g>')
-    return clip + flat + wave + cat
+           f'{cat_shape(sc)}</g></g>')
+    return line + cat
 
 
 def bloch(cx=705, cy=72, r=42, dur=CYCLE):
