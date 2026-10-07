@@ -41,10 +41,6 @@ class PriyanshBhavsar:
   <img src="https://raw.githubusercontent.com/Athleity/Athleity/main/metrics.plugin.isocalendar.svg" width="100%" />
 </picture>
 
-<br/><br/>
-
-
-
 
 </div>
 
