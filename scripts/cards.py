@@ -209,9 +209,9 @@ def cat_shape(sc):
 
 
 def surf_hero(x0=30, x1=545, base=130, amp=6, wl=110, sc=.85, dur=CYCLE):
-    """A full wave spans the card and travels right. The cat rides one face of it, moving with the wave.
-    At T=.62 the cat is 'measured' and vanishes, the wave flattens into a straight green line, stays flat,
-    then a new wave is drawn in from the left and the cat arrives again (same loop as the Bloch sphere)."""
+    """The water is a green line that never disappears. When the cat arrives it rises into a wave that travels
+    right with the cat; at T=.62 the cat is 'measured' and vanishes and the wave settles back to the flat
+    green line, which stays until the cat returns (same loop as the Bloch sphere)."""
     W, k = x1 - x0, 2 * math.pi / wl
     P = dur / 9                       # 9 wave periods per loop, so the wave phase is identical every loop
     c = wl / P                        # wave speed in px/s
@@ -219,14 +219,13 @@ def surf_hero(x0=30, x1=545, base=130, amp=6, wl=110, sc=.85, dur=CYCLE):
     tx0 = (xs - wl / 2 - c * t_in) % wl
     d = "M" + " L".join(f"{x:.0f} {base - amp * math.sin(k * x):.1f}" for x in range(-220, 801, 5))
     tilt = math.degrees(math.atan(amp * k))
-    kt = "0;.08;.16;.72;.7201;1"
-    f = [0, 0, 1, 1, 0, 0]
-    anim = lambda attr, vals: f'<animate attributeName="{attr}" values="{";".join(f"{v:.1f}" for v in vals)}" keyTimes="{kt}" dur="{dur}s" repeatCount="indefinite"/>'
-    clips = (f'<defs><clipPath id="cB"><rect x="{x0}" y="92" width="0" height="48">{anim("width", [W*v for v in f])}</rect></clipPath>'
-             f'<clipPath id="cA"><rect x="{x0}" y="92" width="{W}" height="48">{anim("x", [x0+W*v for v in f])}{anim("width", [W*(1-v) for v in f])}</rect></clipPath></defs>')
-    flat = (f'<g clip-path="url(#cA)"><line x1="{x0}" y1="{base}" x2="{x1}" y2="{base}" stroke="var(--ac)" stroke-width="1.8" stroke-linecap="round"/></g>')
-    wave = (f'<g clip-path="url(#cB)"><g transform="translate(0 {base})"><g>'
-            f'<animateTransform attributeName="transform" type="scale" values="1 .001;1 .001;1 1;1 1;1 .001;1 .001" keyTimes="0;.079;.08;.62;.72;1" dur="{dur}s" repeatCount="indefinite"/>'
+    clip = f'<defs><clipPath id="sea"><rect x="{x0}" y="92" width="{W}" height="48"/></clipPath></defs>'
+    # the water: a green line that is always there; it hands over to the wave while the wave is up (no gap, no overlap)
+    flat = (f'<line x1="{x0}" y1="{base}" x2="{x1}" y2="{base}" stroke="var(--ac)" stroke-width="1.8" stroke-linecap="round">'
+            f'<animate attributeName="stroke-opacity" values="1;1;0;0;1;1" keyTimes="0;.10;.16;.62;.72;1" dur="{dur}s" repeatCount="indefinite"/></line>')
+    # the swell: the same line rising into a travelling wave when the cat arrives, settling back to flat afterwards
+    wave = (f'<g clip-path="url(#sea)"><g transform="translate(0 {base})"><g>'
+            f'<animateTransform attributeName="transform" type="scale" values="1 .001;1 .001;1 1;1 1;1 .001;1 .001" keyTimes="0;.10;.16;.62;.72;1" dur="{dur}s" repeatCount="indefinite"/>'
             f'<g transform="translate(0 {-base})"><g><animateTransform attributeName="transform" type="translate" values="{tx0:.1f} 0;{tx0+wl:.1f} 0" dur="{P:.4f}s" repeatCount="indefinite"/>'
             f'<path d="{d}" fill="none" stroke="var(--ac)" stroke-width="1.8" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></g></g></g></g></g>')
     x_end = xs + c * (.62 - .14) * dur
@@ -238,7 +237,7 @@ def surf_hero(x0=30, x1=545, base=130, amp=6, wl=110, sc=.85, dur=CYCLE):
     burst = (f'<circle cx="{x_end:.1f}" cy="{base-12}" fill="none" stroke="var(--ac)">'
              f'<animate attributeName="r" values="3;3;3;15;15" keyTimes="0;.619;.62;.70;1" dur="{dur}s" repeatCount="indefinite"/>'
              f'<animate attributeName="stroke-opacity" values="0;0;.9;0;0" keyTimes="0;.619;.62;.70;1" dur="{dur}s" repeatCount="indefinite"/></circle>')
-    return clips + flat + wave + cat + burst
+    return clip + flat + wave + cat + burst
 
 
 def bloch(cx=705, cy=72, r=42, dur=CYCLE):
