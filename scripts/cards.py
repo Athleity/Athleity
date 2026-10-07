@@ -193,31 +193,38 @@ def c_streaks(u, w=270, h=152):
         58, 18, w), w, h, 1)
 
 
-CYCLE = 14  # seconds; the sea, the cat and the Bloch sphere all share this one loop
+CYCLE = 17.2  # seconds; the sea, the cat and the Bloch sphere all share this one loop
+# timeline as fractions of the loop: wave starts, bump fully up, cat reaches box, measurement starts, measurement ends
+W0, W1, ARR, MEAS, MEND = .09, .16, .50, .56, .92
 
 
 def cat_shape(sc):
+    """A sitting cat in profile (facing right), feet on y=0, ears at about y=-31."""
     return (f'<g transform="scale({sc})">'
-            '<path d="M-6 -9 C-15 -9 -15 -21 -9 -23" fill="none" stroke="var(--ac)" stroke-width="2.2" stroke-linecap="round">'
-            '<animateTransform attributeName="transform" type="rotate" values="-8 -6 -9;10 -6 -9;-8 -6 -9" dur="1.6s" repeatCount="indefinite"/></path>'
-            '<rect class="acc" x="-15" y="-2" width="30" height="3.6" rx="1.8"/>'
-            '<ellipse class="acc" cx="0" cy="-10" rx="6" ry="7.5"/>'
-            '<polygon class="acc" points="2,-24 3,-31 7,-25"/><polygon class="acc" points="6,-25 10,-30 11,-22"/>'
-            '<circle class="acc" cx="6" cy="-20" r="5.4"/><circle cx="7.6" cy="-20.6" r="1" fill="var(--bg)"/>'
-            '<g stroke="var(--ac)" stroke-width="2" stroke-linecap="round"><line x1="-3" y1="-13" x2="-11" y2="-17"/>'
-            '<line x1="4" y1="-12" x2="12" y2="-9"/></g></g>')
+            '<g><animateTransform attributeName="transform" type="rotate" values="-6 -11 -3;9 -11 -3;-6 -11 -3" dur="1.8s" repeatCount="indefinite"/>'
+            '<path d="M-11 -3 C-20 -3 -19 -14 -13 -17" fill="none" stroke="var(--ac)" stroke-width="2.6" stroke-linecap="round"/></g>'
+            '<path class="acc" d="M-12 0 C-13 -9 -9 -16 -3 -18 L5 -18 C9 -13 10 -6 8 0 Z"/>'
+            '<ellipse class="acc" cx="4.5" cy="-0.9" rx="4.2" ry="1.9"/>'
+            '<circle class="acc" cx="5" cy="-21" r="6"/>'
+            '<polygon class="acc" points="0.8,-24.5 2.4,-31 6.2,-26.2"/><polygon class="acc" points="5.8,-26.2 9.6,-30.6 10.6,-23.8"/>'
+            '<circle cx="7.6" cy="-21.6" r="1.1" fill="var(--bg)"/>'
+            '<g stroke="var(--ac)" stroke-width=".8" stroke-linecap="round"><line x1="10.5" y1="-20" x2="15.5" y2="-21.5"/>'
+            '<line x1="10.5" y1="-18.8" x2="15.5" y2="-18"/></g></g>')
 
 
-def surf_hero(x0=30, x1=590, base=130, amp=9, hw=95, sc=.85, dur=CYCLE, M=60, step=6):
-    """Schroedinger's cat. One green line; ONE bump carries the cat right to a box next to the Bloch sphere.
-    The cat rides into the box, the bump settles flat, at T=.62 the box is 'measured' (opens, empty) and closes;
-    then the cat comes again from the left. Same T=.62 measurement as the Bloch sphere."""
+def surf_hero(x0=30, x1=602, base=131, amp=8, hw=62, sc=.80, dur=CYCLE, M=72, step=5, bw=38, bh=38):
+    """Schroedinger's cat. One green line; ONE curved bump carries the cat to a square open box next to the Bloch
+    sphere. The cat steps in (ears and head stay visible) and a '?' appears. At MEAS (same moment as the Bloch
+    sphere) the '?' goes, the box glows (measurement) and the cat slowly sinks and vanishes. Then a short rest, and
+    the cat steps out of a portal before the wave, lands on its start, the portal closes, and the bump rises under it."""
     sm = lambda e: (lambda q: q * q * (3 - 2 * q))(min(1, max(0, e)))
-    bx, bw, bt = x1, 52, 92                                                    # box: left edge, width, top
-    mid = bx + bw / 2
-    catx = lambda t: x0 + (mid - x0) * sm((t - .10) / .46)                    # cat enters the box at ~.56
+    bx, top, o = x1, 95, 6                                                     # box front-left corner, wall top, 3D offset
+    mid = bx + bw / 2 + o / 2
+    E0, PX, LX = .04, 20, x0 + 4                                               # cat leaves the portal at x=PX, lands at the wave's start LX
+    u_in = lambda t: min(1, max(0, (t - E0) / (W0 - E0)))
+    catx = lambda t: (PX - 12 + (LX - PX + 12) * sm(u_in(t))) if t < W0 else LX + (mid - LX) * sm((t - W0) / (ARR - W0))
     cx = lambda t: min(catx(t), x1 - 30)                                       # bump centre stops short of the box
-    env = lambda t: sm((t - .10) / .08) * (1 - sm((t - .58) / .10))           # bump: rises, holds, flattens
+    env = lambda t: sm((t - W0) / (W1 - W0)) * (1 - sm((t - ARR - .02) / .10)) # bump: rises, holds, flattens
     xs = list(range(x0, x1 + 1, step))
     if xs[-1] != x1:
         xs.append(x1)
@@ -227,26 +234,51 @@ def surf_hero(x0=30, x1=590, base=130, amp=9, hw=95, sc=.85, dur=CYCLE, M=60, st
         c, e, p = cx(t), env(t), catx(t)
         h = lambda x: amp * e * (1 + math.cos(math.pi * (x - c) / hw)) / 2 if abs(x - c) < hw else 0
         frames.append("M" + " L".join(f"{x} {base - h(x):.2f}" for x in xs))
-        cat_xy.append(f"{p:.1f} {base - h(p) - 1:.2f}")
-        cat_op.append(f"{sm((t - .12) / .08) * (1 - sm((t - .57) / .02)):.3f}")  # fades in on the left, hidden inside the box
+        g = sm((p - (bx - 14)) / (mid - (bx - 14)))                            # 0 on the wave -> 1 inside the box
+        y_in = top + 11 + 14 * sm((t - MEAS) / .16)                            # head and ears above the wall; sinks after measurement
+        cat_xy.append(f"{p:.1f} {(base - h(p) - 1 - (32 * u_in(t) * (1 - u_in(t)) if t < W0 else 0)) * (1 - g) + y_in * g:.2f}")
+        cat_op.append(f"{sm((t - E0 + .005) / .01) * (1 - sm((t - MEAS) / .16)):.3f}")
         kts.append(f"{t:.4f}")
     kt, rep = ";".join(kts), f'dur="{dur}s" repeatCount="indefinite"'
     line = (f'<path d="{frames[0]}" fill="none" stroke="var(--ac)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'
             f'<animate attributeName="d" values="{";".join(frames)}" keyTimes="{kt}" {rep}/></path>')
-    cat = (f'<g opacity="0"><animateTransform attributeName="transform" type="translate" values="{";".join(cat_xy)}" keyTimes="{kt}" {rep}/>'
+    cat = (f'<g clip-path="url(#emerge)"><g opacity="0"><animateTransform attributeName="transform" type="translate" values="{";".join(cat_xy)}" keyTimes="{kt}" {rep}/>'
            f'<animate attributeName="opacity" values="{";".join(cat_op)}" keyTimes="{kt}" {rep}/>'
-           f'<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -1.2;0 0" dur="1.4s" repeatCount="indefinite"/>'
-           f'{cat_shape(sc)}</g></g>')
-    # the box is drawn over the cat, so the cat vanishes into it; at measurement the front turns see-through (empty), then closes
-    ko = "0;.61;.64;.72;.78;1"
-    box = (f'<rect x="{bx}" y="{bt}" width="{bw}" height="{base+2-bt}" rx="4" fill="var(--bg)" stroke="var(--ac)" stroke-width="1.8">'
-           f'<animate attributeName="fill-opacity" values="1;1;0;0;1;1" keyTimes="{ko}" {rep}/></rect>'
-           f'<text class="mono" x="{mid}" y="{bt+27}" text-anchor="middle" style="font-size:20px;font-weight:700;fill:var(--ac)">?'
-           f'<animate attributeName="opacity" values="1;1;0;0;1;1" keyTimes="{ko}" {rep}/></text>'
-           f'<circle cx="{mid}" cy="{bt+19}" fill="none" stroke="var(--ac)">'
-           f'<animate attributeName="r" values="4;4;4;30;30" keyTimes="0;.619;.62;.72;1" {rep}/>'
-           f'<animate attributeName="stroke-opacity" values="0;0;.8;0;0" keyTimes="0;.619;.62;.72;1" {rep}/></circle>')
-    return line + cat + box
+           f'<g filter="url(#unc)"><animateTransform attributeName="transform" type="translate" values="0 0;0 -1.2;0 0" dur="1.4s" repeatCount="indefinite"/>'
+           f'{cat_shape(sc)}</g></g></g>')
+    cy, ra, rb = base - 13, 8, 17
+    defs = (f'<defs><clipPath id="emerge"><rect x="{PX}" y="70" width="800" height="70"/></clipPath>'
+            f'<filter id="unc" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="0">'
+            f'<animate attributeName="stdDeviation" values="3;3;0;0" keyTimes="0;{E0};{W0};1" {rep}/></feGaussianBlur></filter>'
+            f'<filter id="glow" x="-100%" y="-50%" width="300%" height="200%"><feGaussianBlur stdDeviation="2.6"/></filter>'
+            f'<radialGradient id="pg"><stop offset="0" style="stop-color:var(--ac);stop-opacity:.35"/>'
+            f'<stop offset=".6" style="stop-color:var(--ac);stop-opacity:.12"/><stop offset="1" style="stop-color:var(--ac);stop-opacity:.03"/></radialGradient></defs>')
+    # the portal sits before the wave: it snaps open with a small overshoot, glows and swirls while the cat steps out, then collapses
+    sp = f"M{ra+4} 0 A{ra+4} {rb+4} 0 1 1 {-(ra+4)} 0 A{ra+4} {rb+4} 0 1 1 {ra+4} 0"
+    sparks = "".join(f'<circle r="1.1" fill="var(--ac)"><animateMotion dur="1.8s" begin="{-i*.6:.1f}s" repeatCount="indefinite" path="{sp}"/></circle>' for i in range(3))
+    swirl = "".join(f'<ellipse rx="{ra*k:.1f}" ry="{rb*k:.1f}" fill="none" stroke="var(--ac)" stroke-width="1.2" stroke-opacity="{o_}" stroke-dasharray="{d}">'
+                     f'<animate attributeName="stroke-dashoffset" values="0;{v}" dur="{t_}s" repeatCount="indefinite"/></ellipse>'
+                     for k, o_, d, v, t_ in ((.7, .55, "6 5", -22, 1.2), (.42, .45, "3 4", 14, .9)))
+    portal = (f'<g transform="translate({PX} {cy})" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.01;.03;.14;.17;1" {rep}/>'
+              f'<g><animateTransform attributeName="transform" type="scale" values=".05;.05;1.06;1;1;.05;.05" keyTimes="0;.01;.04;.05;.14;.17;1" {rep}/>'
+              f'<ellipse rx="{ra}" ry="{rb}" fill="none" stroke="var(--ac)" stroke-width="3" stroke-opacity=".25" filter="url(#glow)"/>'
+              f'<ellipse rx="{ra}" ry="{rb}" fill="url(#pg)"/>{swirl}'
+              f'<ellipse rx="{ra}" ry="{rb}" fill="none" stroke="var(--ac)" stroke-width="1.8"/>'
+              f'<ellipse rx="2" ry="6" fill="var(--ac)"><animate attributeName="fill-opacity" values=".25;.6;.25" dur=".7s" repeatCount="indefinite"/></ellipse>'
+              f'{sparks}</g></g>')
+    st = 'stroke="var(--ac)" stroke-width="1.5" stroke-linejoin="round" stroke-opacity=".9"'
+    back = (f'<rect x="{bx+o}" y="{top-o}" width="{bw}" height="{bh}" rx="3" fill="#161b22" {st}>'
+            f'<animate attributeName="fill" values="#161b22;#161b22;#0e4429;#0e4429;#161b22;#161b22" '
+            f'keyTimes="0;{MEAS:.3f};{MEAS+.04:.3f};{MEND-.06:.3f};{MEND:.3f};1" {rep}/></rect>'
+            f'<line x1="{bx}" y1="{top}" x2="{bx+o}" y2="{top-o}" {st}/>'
+            f'<polygon points="{bx+bw},{top} {bx+bw+o},{top-o} {bx+bw+o},{top+bh-o} {bx+bw},{top+bh}" fill="var(--bg)" {st}/>')
+    front = f'<rect x="{bx}" y="{top}" width="{bw}" height="{bh}" rx="3" fill="var(--bg)" {st}/>'
+    mark = (f'<text class="mono" x="{bx+bw/2:.1f}" y="{top+27}" text-anchor="middle" style="font-size:18px;font-weight:700;fill:var(--ac)">?'
+            f'<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;{ARR-.03:.3f};{ARR+.01:.3f};{MEAS-.005:.3f};{MEAS+.005:.3f};1" {rep}/></text>')
+    ring = lambda s: (f'<circle cx="{bx+bw/2+o/2:.1f}" cy="{top+bh/2-o/2:.1f}" fill="none" stroke="var(--ac)">'
+                      f'<animate attributeName="r" values="6;6;6;34;34" keyTimes="0;{s-.001:.3f};{s:.3f};{s+.10:.3f};1" {rep}/>'
+                      f'<animate attributeName="stroke-opacity" values="0;0;.8;0;0" keyTimes="0;{s-.001:.3f};{s:.3f};{s+.10:.3f};1" {rep}/></circle>')
+    return defs + line + back + cat + portal + front + mark + ring(MEAS) + ring(MEAS + .12) + ring(MEAS + .24)
 
 
 def bloch(cx=705, cy=72, r=42, dur=CYCLE):
@@ -256,14 +288,14 @@ def bloch(cx=705, cy=72, r=42, dur=CYCLE):
     pts = []
     for k in range(M + 1):
         t = k / M
-        if t < .08:
+        if t < .03:
             th, ph = 0, 0
-        elif t < .14:
-            th, ph = th0 * ease((t - .08) / .06), 0
-        elif t < .62:
-            th, ph = th0, 2 * math.pi * 1.1 * (t - .14) / .48
-        elif t < .67:
-            th, ph = th0 * (1 - ease((t - .62) / .05)), 2 * math.pi * 1.1
+        elif t < .09:
+            th, ph = th0 * ease((t - .03) / .06), 0
+        elif t < MEAS:
+            th, ph = th0, 2 * math.pi * 1.1 * (t - .09) / (MEAS - .09)
+        elif t < MEAS + .10:
+            th, ph = th0 * (1 - ease((t - MEAS) / .10)), 2 * math.pi * 1.1
         else:
             th, ph = 0, 0
         pts.append((cx + r * math.sin(th) * math.cos(ph), cy - r * math.cos(th) + r * .3 * math.sin(th) * math.sin(ph)))
@@ -279,10 +311,10 @@ def bloch(cx=705, cy=72, r=42, dur=CYCLE):
             f'<ellipse cx="{cx}" cy="{cy+oy:.1f}" rx="{rx:.1f}" ry="{rx*.3:.1f}" fill="none" stroke="var(--ac)" stroke-opacity=".4" stroke-dasharray="2 3"/>'
             f'<text class="s mono" x="{cx+5}" y="{cy-r-9}">|0⟩</text><text class="s mono" x="{cx+5}" y="{cy+r+16}">|1⟩</text>'
             f'<circle cx="{cx}" cy="{cy}" fill="none" stroke="var(--ac)">'
-            f'<animate attributeName="r" values="{r};{r};{r};{r+14};{r+14}" keyTimes="0;.619;.62;.70;1" dur="{dur}s" repeatCount="indefinite"/>'
-            f'<animate attributeName="stroke-opacity" values="0;0;.7;0;0" keyTimes="0;.619;.62;.70;1" dur="{dur}s" repeatCount="indefinite"/></circle>'
+            f'<animate attributeName="r" values="{r};{r};{r};{r+14};{r+14}" keyTimes="0;{MEAS-.001:.3f};{MEAS:.3f};{MEAS+.14:.3f};1" dur="{dur}s" repeatCount="indefinite"/>'
+            f'<animate attributeName="stroke-opacity" values="0;0;.7;0;0" keyTimes="0;{MEAS-.001:.3f};{MEAS:.3f};{MEAS+.14:.3f};1" dur="{dur}s" repeatCount="indefinite"/></circle>'
             f'<circle cx="{cx}" cy="{cy-r}" r="4.5" fill="none" stroke="var(--ac)">'
-            f'<animate attributeName="stroke-opacity" values="1;1;0;0;1;1" keyTimes="0;.07;.10;.65;.69;1" dur="{dur}s" repeatCount="indefinite"/></circle>'
+            f'<animate attributeName="stroke-opacity" values="1;1;0;0;1;1" keyTimes="0;.02;.05;{MEAS+.08:.3f};{MEAS+.12:.3f};1" dur="{dur}s" repeatCount="indefinite"/></circle>'
             f'<line x1="{cx}" y1="{cy}" x2="{pts[0][0]:.1f}" y2="{pts[0][1]:.1f}" stroke="var(--ac)" stroke-width="1.8" stroke-linecap="round">'
             f'{anim("x2", 0)}{anim("y2", 1)}</line>'
             f'<circle r="3.4" cx="{pts[0][0]:.1f}" cy="{pts[0][1]:.1f}" fill="var(--ac)">{anim("cx", 0)}{anim("cy", 1)}</circle>'
