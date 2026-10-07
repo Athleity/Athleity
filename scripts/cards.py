@@ -199,17 +199,18 @@ W0, W1, ARR, MEAS, MEND = .09, .16, .50, .56, .92
 
 
 def cat_shape(sc):
-    """A sitting cat in profile (facing right), feet on y=0, ears at about y=-31."""
     return (f'<g transform="scale({sc})">'
-            '<g><animateTransform attributeName="transform" type="rotate" values="-6 -11 -3;9 -11 -3;-6 -11 -3" dur="1.8s" repeatCount="indefinite"/>'
-            '<path d="M-11 -3 C-20 -3 -19 -14 -13 -17" fill="none" stroke="var(--ac)" stroke-width="2.6" stroke-linecap="round"/></g>'
-            '<path class="acc" d="M-12 0 C-13 -9 -9 -16 -3 -18 L5 -18 C9 -13 10 -6 8 0 Z"/>'
-            '<ellipse class="acc" cx="4.5" cy="-0.9" rx="4.2" ry="1.9"/>'
-            '<circle class="acc" cx="5" cy="-21" r="6"/>'
-            '<polygon class="acc" points="0.8,-24.5 2.4,-31 6.2,-26.2"/><polygon class="acc" points="5.8,-26.2 9.6,-30.6 10.6,-23.8"/>'
-            '<circle cx="7.6" cy="-21.6" r="1.1" fill="var(--bg)"/>'
-            '<g stroke="var(--ac)" stroke-width=".8" stroke-linecap="round"><line x1="10.5" y1="-20" x2="15.5" y2="-21.5"/>'
-            '<line x1="10.5" y1="-18.8" x2="15.5" y2="-18"/></g></g>')
+            '<path d="M-6 -9 C-15 -9 -15 -21 -9 -23" fill="none" stroke="var(--ac)" stroke-width="2.2" stroke-linecap="round">'
+            '<animateTransform attributeName="transform" type="rotate" values="-8 -6 -9;10 -6 -9;-8 -6 -9" dur="1.6s" repeatCount="indefinite"/></path>'
+            '<ellipse class="acc" cx="0" cy="-10" rx="6" ry="7.5"/>'
+            '<polygon class="acc" points="2,-24 3,-31 7,-25"/><polygon class="acc" points="6,-25 10,-30 11,-22"/>'
+            '<circle class="acc" cx="6" cy="-20" r="5.4"/><circle cx="7.6" cy="-20.6" r="1" fill="var(--bg)"/>'
+            '<g stroke="var(--ac)" stroke-width="2" stroke-linecap="round"><line x1="-3" y1="-13" x2="-11" y2="-17"/>'
+            '<line x1="4" y1="-12" x2="12" y2="-9"/></g>'
+            # surfboard: pointed nose, slightly curved deck, centre stringer and two fins under the tail
+            '<polygon class="acc" points="-13,2.2 -9.6,2.5 -12.6,6" /><polygon class="acc" points="-8.4,2.7 -5.6,2.8 -8,5.6"/>'
+            '<path class="acc" d="M-17 -1 C-8 -3.4 8 -3.4 19 -2 C10 3.2 -8 3.4 -14 2.5 C-16.6 2.1 -17.6 0.4 -17 -1 Z" stroke="var(--bg)" stroke-width=".9" stroke-linejoin="round"/>'
+            '<path d="M-14.5 -.2 C-5 -1.2 8 -1.2 16 -1.6" fill="none" stroke="var(--bg)" stroke-width=".7" stroke-opacity=".7"/></g>')
 
 
 def surf_hero(x0=30, x1=602, base=131, amp=8, hw=62, sc=.80, dur=CYCLE, M=72, step=5, bw=38, bh=38):
@@ -255,10 +256,10 @@ def surf_hero(x0=30, x1=602, base=131, amp=8, hw=62, sc=.80, dur=CYCLE, M=72, st
             f'<stop offset=".6" style="stop-color:var(--ac);stop-opacity:.12"/><stop offset="1" style="stop-color:var(--ac);stop-opacity:.03"/></radialGradient></defs>')
     # the portal sits before the wave: it snaps open with a small overshoot, glows and swirls while the cat steps out, then collapses
     sp = f"M{ra+4} 0 A{ra+4} {rb+4} 0 1 1 {-(ra+4)} 0 A{ra+4} {rb+4} 0 1 1 {ra+4} 0"
-    sparks = "".join(f'<circle r="1.1" fill="var(--ac)"><animateMotion dur="1.8s" begin="{-i*.6:.1f}s" repeatCount="indefinite" path="{sp}"/></circle>' for i in range(3))
+    sparks = "".join(f'<circle r="1.1" fill="var(--ac)"><animateMotion dur="1.8s" begin="{-i*.6:.1f}s" repeatCount="indefinite" path="{sp}"/></circle>' for i in range(0))
     swirl = "".join(f'<ellipse rx="{ra*k:.1f}" ry="{rb*k:.1f}" fill="none" stroke="var(--ac)" stroke-width="1.2" stroke-opacity="{o_}" stroke-dasharray="{d}">'
                      f'<animate attributeName="stroke-dashoffset" values="0;{v}" dur="{t_}s" repeatCount="indefinite"/></ellipse>'
-                     for k, o_, d, v, t_ in ((.7, .55, "6 5", -22, 1.2), (.42, .45, "3 4", 14, .9)))
+                     for k, o_, d, v, t_ in ((.6, .55, "4 4", -18, 1.1),))
     portal = (f'<g transform="translate({PX} {cy})" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.01;.03;.14;.17;1" {rep}/>'
               f'<g><animateTransform attributeName="transform" type="scale" values=".05;.05;1.06;1;1;.05;.05" keyTimes="0;.01;.04;.05;.14;.17;1" {rep}/>'
               f'<ellipse rx="{ra}" ry="{rb}" fill="none" stroke="var(--ac)" stroke-width="3" stroke-opacity=".25" filter="url(#glow)"/>'
@@ -273,7 +274,7 @@ def surf_hero(x0=30, x1=602, base=131, amp=8, hw=62, sc=.80, dur=CYCLE, M=72, st
             f'<line x1="{bx}" y1="{top}" x2="{bx+o}" y2="{top-o}" {st}/>'
             f'<polygon points="{bx+bw},{top} {bx+bw+o},{top-o} {bx+bw+o},{top+bh-o} {bx+bw},{top+bh}" fill="var(--bg)" {st}/>')
     front = f'<rect x="{bx}" y="{top}" width="{bw}" height="{bh}" rx="3" fill="var(--bg)" {st}/>'
-    mark = (f'<text class="mono" x="{bx+bw/2:.1f}" y="{top+27}" text-anchor="middle" style="font-size:18px;font-weight:700;fill:var(--ac)">?'
+    mark = (f'<text class="mono" x="{bx+bw/2:.1f}" y="{top+28}" text-anchor="middle" style="font-size:25px;font-weight:700;fill:var(--ac)">?'
             f'<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;{ARR-.03:.3f};{ARR+.01:.3f};{MEAS-.005:.3f};{MEAS+.005:.3f};1" {rep}/></text>')
     ring = lambda s: (f'<circle cx="{bx+bw/2+o/2:.1f}" cy="{top+bh/2-o/2:.1f}" fill="none" stroke="var(--ac)">'
                       f'<animate attributeName="r" values="6;6;6;34;34" keyTimes="0;{s-.001:.3f};{s:.3f};{s+.10:.3f};1" {rep}/>'
