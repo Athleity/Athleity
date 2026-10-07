@@ -28,8 +28,11 @@ class PriyanshBhavsar:
             "build the tool from scratch when the black box stops being trustworthy",
             "treat a strange result as a question, not an error to discard",
         ]
-```
 
+
+### Part 3 — Live Contribution Skyline (isocalendar only)
+
+```html
 <br/>
 
 <div align="center">
@@ -40,12 +43,6 @@ class PriyanshBhavsar:
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Athleity/Athleity/main/metrics.plugin.isocalendar.svg" />
   <img src="https://raw.githubusercontent.com/Athleity/Athleity/main/metrics.plugin.isocalendar.svg" width="100%" />
 </picture>
-
-<br/><br/>
-
-<img src="https://github-readme-activity-graph.vercel.app/graph?username=Athleity&theme=react-dark&hide_border=true&area=true&bg_color=0D1117" width="100%"/>
-
-<sub>Both rendered directly from my real GitHub contribution data — nothing here is hand-typed.</sub>
 
 </div>
 
@@ -105,32 +102,3 @@ Five α,n reactions, EXFOR cross-section data, 19 notebooks of numerical integra
 </table>
 
 <br/>
-
-<div align="center">
-
-### 🧰 Stack
-
-<img src="https://skillicons.dev/icons?i=python,cpp,postgres,git,linux,bash,pytorch,vscode&theme=dark" />
-
-<br/><br/>
-
-![Qiskit](https://img.shields.io/badge/Qiskit-6929C4?style=flat-square&logo=qiskit&logoColor=white)
-![PennyLane](https://img.shields.io/badge/PennyLane-1C1C3A?style=flat-square)
-![pyQuil](https://img.shields.io/badge/pyQuil-FF6B00?style=flat-square)
-![QuTiP](https://img.shields.io/badge/QuTiP-00599C?style=flat-square)
-![Stim](https://img.shields.io/badge/Stim-2E2E2E?style=flat-square)
-
-</div>
-
-<br/>
-
-<div align="center">
-
-> *"The measurement isn't just a number to report — it's quietly asking a question, and your job is to notice it's asking."*
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://capsule-render.vercel.app/api?type=waving&color=0:58A6FF,100:0F2027&height=100&section=footer" />
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:1565C0,100:E3F2FD&height=100&section=footer" width="100%"/>
-</picture>
-
-</div>
