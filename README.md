@@ -1,41 +1,56 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0F2027,50:2C5364,100:58A6FF&height=220&section=header&text=Priyansh%20Bhavsar&fontSize=48&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=Quantum%20Technologies%20%40%20IIT%20Jodhpur&descAlignY=58&descSize=18" width="100%"/>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://capsule-render.vercel.app/api?type=waving&color=0:000000,50:1A1A2E,100:0F3460&height=230&section=header&text=PRIYANSH%20BHAVSAR&fontSize=46&fontColor=58A6FF&animation=fadeIn&fontAlignY=35&desc=Quantum%20Technologies%20%E2%80%94%20IIT%20Jodhpur&descAlignY=58&descSize=18&descColor=ffffff" />
+  <source media="(prefers-color-scheme: light)" srcset="https://capsule-render.vercel.app/api?type=waving&color=0:E3F2FD,50:90CAF9,100:1565C0&height=230&section=header&text=PRIYANSH%20BHAVSAR&fontSize=46&fontColor=0D47A1&animation=fadeIn&fontAlignY=35&desc=Quantum%20Technologies%20%E2%80%94%20IIT%20Jodhpur&descAlignY=58&descSize=18&descColor=1565C0" />
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0F2027,50:2C5364,100:58A6FF&height=230&section=header&text=PRIYANSH%20BHAVSAR&fontSize=46&fontColor=ffffff&animation=fadeIn&fontAlignY=35&desc=Quantum%20Technologies%20%E2%80%94%20IIT%20Jodhpur&descAlignY=58&descSize=18" />
+</picture>
 
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&duration=3000&pause=800&color=58A6FF&center=true&vCenter=true&width=700&lines=Running+QAOA+on+real+quantum+hardware;Building+quantum+simulators+from+scratch+in+C%2B%2B;Dept+Rank+2%2F30+%7C+CGPA+8.08;Translating+research+papers+into+working+code" alt="Typing SVG" />
+<img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=500&size=20&duration=2800&pause=900&color=58A6FF&center=true&vCenter=true&width=720&lines=Running+QAOA+on+real+quantum+hardware+%E2%9A%9B%EF%B8%8F;Building+quantum+simulators+from+scratch+in+C%2B%2B;Dept+Rank+2%2F30+%7C+CGPA+8.08;Translating+research+papers+into+working+code" alt="Typing SVG" />
 
 <br/>
 
-[![LinkedIn](https://img.shields.io/badge/-LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/priyansh-bhavsar-2b4b95260)
-[![Gmail](https://img.shields.io/badge/-Email-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:b22ph005@alumni.iitj.ac.in)
-[![GitHub](https://img.shields.io/badge/-Athleity-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Athleity)
+<a href="https://linkedin.com/in/priyansh-bhavsar-2b4b95260"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white"/></a>
+<a href="mailto:b22ph005@alumni.iitj.ac.in"><img src="https://img.shields.io/badge/Email-EA4335?style=for-the-badge&logo=gmail&logoColor=white"/></a>
+<a href="https://github.com/Athleity"><img src="https://img.shields.io/badge/Athleity-181717?style=for-the-badge&logo=github&logoColor=white"/></a>
 
 </div>
 
 <br/>
 
-## ⚡ About Me
-
 ```python
 class PriyanshBhavsar:
-    def __init__(self):
-        self.education = "BS Physics, Quantum Technologies @ IIT Jodhpur"
-        self.rank = "2nd / 30"
-        self.cgpa = 8.08
-        self.currently_researching = "Quantum ML for cancer subtype classification"
-        self.hardware_used = ["IBM Quantum (156-qubit)", "Rigetti Ankaa-3"]
+    """BS Physics, Quantum Technologies — IIT Jodhpur"""
 
-    def whatIDo(self):
+    def __init__(self):
+        self.rank          = "2nd / 30"
+        self.cgpa          = 8.08
+        self.researching   = "Quantum ML for cancer subtype classification"
+        self.hardware      = ["IBM Quantum (156-qubit)", "Rigetti Ankaa-3"]
+        self.flagship_win  = "Best Overall Project — Q-volution 2026 (15 countries)"
+
+    def philosophy(self) -> list[str]:
         return [
-            "🧮 Translate quantum algorithms into working circuit code",
-            "⚙️  Build performance-critical tools from scratch, not black boxes",
-            "🔬 Chase down noise instead of averaging it away",
+            "translate algorithms into code that survives real hardware noise",
+            "build the tool from scratch when the black box stops being trustworthy",
+            "treat a strange result as a question, not an error to discard",
         ]
 ```
 
-🏆 **Best Overall Project** — Q-volution 2026 International Quantum Hackathon (vs. teams from 15 countries)
-🔭 Currently researching quantum ML for cancer subtype classification @ South Asian University
-🛠️ Building a quantum circuit simulator that outperforms Qiskit Aer
+<br/>
+
+<div align="center">
+
+### 🛰️ Live Contribution Skyline
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Athleity/Athleity/main/metrics.plugin.isocalendar.svg" />
+  <img src="https://raw.githubusercontent.com/Athleity/Athleity/main/metrics.plugin.isocalendar.svg" width="100%" />
+</picture>
+
+<sub>Rendered nightly by GitHub Actions directly from my real contribution graph — nothing here is hand-typed.</sub>
+
+</div>
 
 <br/>
 
@@ -43,54 +58,50 @@ class PriyanshBhavsar:
 
 <table>
 <tr>
-<td width="50%">
+<td width="50%" valign="top">
 
 ### 🏆 Power Grid QAOA
 **Q-volution 2026 — Best Overall Project**
 
-Translated a QUBO formulation into pyQuil code, ran it on Rigetti's Ankaa-3, and discovered hardware noise tracked circuit depth — built a noise-aware fix that cut optimizer iterations **50%**.
+Translated a QUBO formulation into pyQuil, ran it on Rigetti's Ankaa-3, found hardware noise tracked circuit depth — built a noise-aware fix cutting optimizer iterations **50%**.
 
-`97.31%` approximation ratio · beat 15 countries
-
-`Python` `pyQuil` `Rigetti QPU`
+> `97.31%` approximation ratio · beat 15 countries
+> `Python` `pyQuil` `Rigetti QPU`
 
 </td>
-<td width="50%">
+<td width="50%" valign="top">
 
-### ⚡ Lightning-Lite Simulator
-**Quantum circuit simulator, built from zero**
+### ⚡ Lightning-Lite
+**Quantum simulator, built from zero**
 
-C++20 from scratch — no black boxes. SIMD-vectorized, cache-optimized, validated gate-by-gate against Qiskit Aer across hundreds of random circuits.
+C++20, no black boxes. SIMD-vectorized, cache-optimized, validated gate-by-gate against Qiskit Aer across hundreds of random circuits.
 
-`3.5×` faster than Qiskit Aer · `94%` memory bandwidth
-
-`C++20` `SIMD` `pybind11`
+> `3.5×` faster than Qiskit Aer · `94%` memory bandwidth
+> `C++20` `SIMD` `pybind11`
 
 </td>
 </tr>
 <tr>
-<td width="50%">
+<td width="50%" valign="top">
 
 ### 📡 IBM 156-Qubit Pipeline
 **Daily automated hardware characterization**
 
-Tracks T1/T2, gate fidelity, and readout errors across every qubit, every day, with zero manual intervention. Live Dash dashboards catch drift before it bites.
+T1/T2, gate fidelity, and readout errors across every qubit, every day, zero manual intervention. Live dashboards catch drift before it bites.
 
-`99.8%` measurement fidelity
-
-`Python` `Qiskit` `PostgreSQL` `Dash`
+> `99.8%` measurement fidelity
+> `Python` `Qiskit` `PostgreSQL` `Dash`
 
 </td>
-<td width="50%">
+<td width="50%" valign="top">
 
 ### 🔭 Nuclear Astrophysics
 **Computational S-factor analysis**
 
 Five α,n reactions, EXFOR cross-section data, 19 notebooks of numerical integration — presented at the 12th IAPT National Student Symposium.
 
-`Gauss-Legendre` `Trapezoidal quadrature`
-
-`Python` `NumPy` `SciPy`
+> `Gauss-Legendre` `Trapezoidal quadrature`
+> `Python` `NumPy` `SciPy`
 
 </td>
 </tr>
@@ -98,17 +109,14 @@ Five α,n reactions, EXFOR cross-section data, 19 notebooks of numerical integra
 
 <br/>
 
-## 🧰 Tech Stack
-
 <div align="center">
+
+### 🧰 Stack
 
 <img src="https://skillicons.dev/icons?i=python,cpp,postgres,git,linux,bash,pytorch,vscode&theme=dark" />
 
-</div>
+<br/><br/>
 
-<div align="center">
-
-**Quantum Frameworks**
 ![Qiskit](https://img.shields.io/badge/Qiskit-6929C4?style=flat-square&logo=qiskit&logoColor=white)
 ![PennyLane](https://img.shields.io/badge/PennyLane-1C1C3A?style=flat-square)
 ![pyQuil](https://img.shields.io/badge/pyQuil-FF6B00?style=flat-square)
@@ -119,43 +127,13 @@ Five α,n reactions, EXFOR cross-section data, 19 notebooks of numerical integra
 
 <br/>
 
-## 📊 GitHub Analytics
-
 <div align="center">
 
-<img src="https://github-readme-stats.vercel.app/api?username=Athleity&show_icons=true&theme=tokyonight&hide_border=true&count_private=true&include_all_commits=true" height="165"/>
-<img src="https://github-readme-streak-stats.herokuapp.com/?user=Athleity&theme=tokyonight&hide_border=true" height="165"/>
+> *"The measurement isn't just a number to report — it's quietly asking a question, and your job is to notice it's asking."*
 
-<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Athleity&layout=compact&theme=tokyonight&hide_border=true" height="150"/>
-
-</div>
-
-<div align="center">
-
-### 🏅 Trophy Case
-
-<img src="https://github-profile-trophy.vercel.app/?username=Athleity&theme=tokyonight&no-frame=true&row=1&column=6" />
-
-</div>
-
-<br/>
-
-## 🐍 Contribution Snake
-
-<div align="center">
-
-<img src="https://raw.githubusercontent.com/Athleity/Athleity/output/github-contribution-grid-snake-dark.svg" />
-
-</div>
-
-<br/>
-
-<div align="center">
-
-> *"The measurement is not just a number to report — it's quietly asking a question, and your job is to notice it's asking."*
-
-![Profile Views](https://komarev.com/ghpvc/?username=Athleity&color=58A6FF&style=for-the-badge&label=PROFILE+VIEWS)
-
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:58A6FF,100:0F2027&height=100&section=footer" width="100%"/>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://capsule-render.vercel.app/api?type=waving&color=0:58A6FF,100:0F2027&height=100&section=footer" />
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:1565C0,100:E3F2FD&height=100&section=footer" width="100%"/>
+</picture>
 
 </div>
