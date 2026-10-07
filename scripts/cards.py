@@ -208,36 +208,26 @@ def cat_shape(sc):
             '<line x1="4" y1="-12" x2="12" y2="-9"/></g></g>')
 
 
-def surf_hero(x0=30, x1=545, base=130, amp=6, wl=110, sc=.85, dur=CYCLE):
-    """The water is a green line that never disappears. When the cat arrives it rises into a wave that travels
-    right with the cat; at T=.62 the cat is 'measured' and vanishes and the wave settles back to the flat
-    green line, which stays until the cat returns (same loop as the Bloch sphere)."""
-    W, k = x1 - x0, 2 * math.pi / wl
-    P = dur / 9                       # 9 wave periods per loop, so the wave phase is identical every loop
-    c = wl / P                        # wave speed in px/s
-    t_in, xs = .14 * dur, 38          # cat steps onto the wave at x=xs, at T=.14
-    tx0 = (xs - wl / 2 - c * t_in) % wl
-    d = "M" + " L".join(f"{x:.0f} {base - amp * math.sin(k * x):.1f}" for x in range(-220, 801, 5))
-    tilt = math.degrees(math.atan(amp * k))
-    clip = f'<defs><clipPath id="sea"><rect x="{x0}" y="92" width="{W}" height="48"/></clipPath></defs>'
-    # the water: a green line that is always there; it hands over to the wave while the wave is up (no gap, no overlap)
-    flat = (f'<line x1="{x0}" y1="{base}" x2="{x1}" y2="{base}" stroke="var(--ac)" stroke-width="1.8" stroke-linecap="round">'
-            f'<animate attributeName="stroke-opacity" values="1;1;0;0;1;1" keyTimes="0;.10;.16;.62;.72;1" dur="{dur}s" repeatCount="indefinite"/></line>')
-    # the swell: the same line rising into a travelling wave when the cat arrives, settling back to flat afterwards
+def surf_hero(x0=30, x1=545, base=130, amp=5, hw=85, sc=.85, dur=CYCLE):
+    """Always-on green line. ONE gentle hump rides in from the left carrying the cat, the cat fades out slowly
+    near the right, and the hump flattens into the line (same T=.62 measurement as the Bloch sphere)."""
+    xa, xb = x0 - hw, x1 - 40                       # hump centre travels from just off the left edge to the right
+    d = "M" + " L".join(f"{x} {-amp * (1 + math.cos(math.pi * x / hw)) / 2:.2f}" for x in range(-hw, hw + 1, 5))
+    kt = "0;.10;.62;1"
+    clip = f'<defs><clipPath id="sea"><rect x="{x0}" y="{base-30}" width="{x1-x0}" height="40"/></clipPath></defs>'
+    flat = f'<line x1="{x0}" y1="{base}" x2="{x1}" y2="{base}" stroke="var(--ac)" stroke-width="1.8" stroke-linecap="round"/>'
+    sk = "0;.10;.16;.58;.66;1"                      # hump height: flat, rises, holds, flattens, flat
     wave = (f'<g clip-path="url(#sea)"><g transform="translate(0 {base})"><g>'
-            f'<animateTransform attributeName="transform" type="scale" values="1 .001;1 .001;1 1;1 1;1 .001;1 .001" keyTimes="0;.10;.16;.62;.72;1" dur="{dur}s" repeatCount="indefinite"/>'
-            f'<g transform="translate(0 {-base})"><g><animateTransform attributeName="transform" type="translate" values="{tx0:.1f} 0;{tx0+wl:.1f} 0" dur="{P:.4f}s" repeatCount="indefinite"/>'
-            f'<path d="{d}" fill="none" stroke="var(--ac)" stroke-width="1.8" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></g></g></g></g></g>')
-    x_end = xs + c * (.62 - .14) * dur
-    cat = (f'<g><animateTransform attributeName="transform" type="translate" values="{xs} 0;{xs} 0;{x_end:.1f} 0;{x_end:.1f} 0" keyTimes="0;.14;.62;1" dur="{dur}s" repeatCount="indefinite"/>'
-           f'<g><animateTransform attributeName="transform" type="translate" values="0 {base-1};0 {base-2.2};0 {base-1}" dur="1.4s" repeatCount="indefinite"/>'
-           f'<g><animateTransform attributeName="transform" type="scale" values="0;0;1;1;0;0" keyTimes="0;.14;.17;.62;.67;1" dur="{dur}s" repeatCount="indefinite"/>'
-           f'<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.14;.17;.62;.67;1" dur="{dur}s" repeatCount="indefinite"/>'
-           f'<g transform="rotate({tilt:.1f})">{cat_shape(sc)}</g></g></g></g>')
-    burst = (f'<circle cx="{x_end:.1f}" cy="{base-12}" fill="none" stroke="var(--ac)">'
-             f'<animate attributeName="r" values="3;3;3;15;15" keyTimes="0;.619;.62;.70;1" dur="{dur}s" repeatCount="indefinite"/>'
-             f'<animate attributeName="stroke-opacity" values="0;0;.9;0;0" keyTimes="0;.619;.62;.70;1" dur="{dur}s" repeatCount="indefinite"/></circle>')
-    return clip + flat + wave + cat + burst
+            f'<animateTransform attributeName="transform" type="translate" values="{xa} 0;{xa} 0;{xb} 0;{xb} 0" keyTimes="{kt}" dur="{dur}s" repeatCount="indefinite"/>'
+            f'<g><animateTransform attributeName="transform" type="scale" values="1 0;1 0;1 1;1 1;1 0;1 0" keyTimes="{sk}" dur="{dur}s" repeatCount="indefinite"/>'
+            f'<path d="{d}" fill="none" stroke="var(--ac)" stroke-width="1.8" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>'
+            f'</g></g></g></g>')
+    cat = (f'<g><animateTransform attributeName="transform" type="translate" values="{xa} 0;{xa} 0;{xb} 0;{xb} 0" keyTimes="{kt}" dur="{dur}s" repeatCount="indefinite"/>'
+           f'<g><animateTransform attributeName="transform" type="translate" values="0 {base-1};0 {base-1};0 {base-1-amp};0 {base-1-amp};0 {base-1};0 {base-1}" keyTimes="{sk}" dur="{dur}s" repeatCount="indefinite"/>'
+           f'<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -1.2;0 0" dur="1.4s" repeatCount="indefinite"/>'
+           f'<g><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.16;.24;.50;.66;1" dur="{dur}s" repeatCount="indefinite"/>'
+           f'{cat_shape(sc)}</g></g></g></g>')
+    return clip + flat + wave + cat
 
 
 def bloch(cx=705, cy=72, r=42, dur=CYCLE):
@@ -291,7 +281,7 @@ def hero():
                  for i, t in enumerate(lines))
     return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}"><style>{CSS}</style>{DEFS}'
             f'<rect class="bg" x=".5" y=".5" width="{w-1}" height="{h-1}" rx="12"/>'
-                        f'<rect class="acc" x="0.5" y="24" width="4" height="44" rx="2"/>{bloch()}{surf_hero()}<g>'
+            f'<rect class="acc" x="0.5" y="24" width="4" height="44" rx="2"/>{bloch()}{surf_hero()}<g>'
             '<text x="30" y="48" font-size="30" font-weight="800" letter-spacing=".01em" fill="var(--fg)">Priyansh Bhavsar</text>'
             '<text class="sub" x="30" y="69">BS Physics · Quantum Technologies, IIT Jodhpur</text>'
             f'{tl}</g></svg>')
