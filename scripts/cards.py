@@ -107,7 +107,7 @@ def repo_rows(name):
         return [("Language", d.get("language") or "n/a"), ("Stars", str(d["stargazers_count"])),
                 ("Updated", f"{MONTHS[int(p[5:7])-1]} {p[:4]}")]
     except Exception:
-        return [("Language", "Python"), ("Stars", "0"), ("Updated", "recently")]
+        return [("Language", "–"), ("Stars", "–"), ("Updated", "–")]
 
 
 def card(title, body, w, h, i=0, m=18, ket=""):
@@ -123,9 +123,8 @@ def rows(pairs, y, dy, w, m=18, k="k", v="v"):
 
 
 def project(title, big, sub, pairs, i, bar=None, w=200, h=150, ket=""):
-    for a, b in pairs:
-        assert len(a) + len(b) <= 29, (a, b)
-    assert len(sub) <= 34, sub
+    pairs = [(x, y if len(x) + len(y) <= 29 else y[:max(1, 28 - len(x))] + "…") for x, y in pairs]  # never crash on long repo data
+    sub = sub if len(sub) <= 34 else sub[:33] + "…"
     b = ""
     if bar:
         b = (f'<rect class="trk" x="14" y="68" width="{w-28}" height="3" rx="1.5"/>'
@@ -331,7 +330,7 @@ def main():
     for name, svg in cards.items():
         with open(f"{OUT}/{name}.svg", "w", encoding="utf-8") as f:
             f.write(svg)
-    print("wrote", ", ".join(cards))
+    print("wrote", ", ".join(f"{OUT}/{n}.svg" for n in cards))
 
 
 if __name__ == "__main__":
