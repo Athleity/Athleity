@@ -10,8 +10,7 @@ OUT, MONTHS = "cards", "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split()
 FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif"
 MONO = "ui-monospace,SFMono-Regular,Menlo,Consolas,monospace"
 CSS = f"""
-:root{{--bg:#fff;--bd:#d1d9e0;--fg:#1f2328;--mu:#59636e;--ac:#1a7f37;--ac2:#2da44e}}
-@media (prefers-color-scheme:dark){{:root{{--bg:#0d1117;--bd:#30363d;--fg:#e6edf3;--mu:#8b949e;--ac:#3fb950;--ac2:#56d364}}}}
+:root{{--bg:#0d1117;--bd:#30363d;--fg:#e6edf3;--mu:#8b949e;--ac:#39d353;--ac2:#26a641}}
 text{{font-family:{FONT}}}
 .mono{{font-family:{MONO}}}
 .bg{{fill:var(--bg);stroke:var(--bd)}}
@@ -25,11 +24,13 @@ text{{font-family:{FONT}}}
 .sub{{font-size:13px;fill:var(--mu)}}
 .big{{font-family:{MONO};font-size:26px;font-weight:700;fill:var(--ac)}}
 .acc{{fill:var(--ac)}}
-.l0{{fill:var(--bd);fill-opacity:.55}}
-.l1{{fill:var(--ac);fill-opacity:.3}}
-.l2{{fill:var(--ac);fill-opacity:.5}}
-.l3{{fill:var(--ac);fill-opacity:.75}}
-.l4{{fill:var(--ac)}}
+.l0{{fill:#161b22}}
+.l1{{fill:#0e4429}}
+.l2{{fill:#006d32}}
+.l3{{fill:#26a641}}
+.l4{{fill:#39d353}}
+.eye{{transform-box:fill-box;transform-origin:center;animation:blink 4s infinite}}
+@keyframes blink{{0%,94%,100%{{transform:scaleY(1)}}97%{{transform:scaleY(.1)}}}}
 .live{{fill:var(--ac2)}}
 .in{{animation:rise .6s ease-out both}}
 .grow{{transform-box:fill-box;transform-origin:left;animation:sweep 1.2s .4s ease-out both}}
@@ -184,6 +185,37 @@ def c_streaks(u, w=270, h=140):
         54, 17, w), w, h, 1)
 
 
+
+def cat_sit():
+    return ('<g transform="translate(742,16) scale(1.3)">'
+            '<path d="M14 50 C0 52 -2 34 8 28" fill="none" stroke="var(--ac)" stroke-width="4.5" stroke-linecap="round">'
+            '<animateTransform attributeName="transform" type="rotate" values="-10 14 50;14 14 50;-10 14 50" dur="2.2s" repeatCount="indefinite"/></path>'
+            '<ellipse class="acc" cx="30" cy="42" rx="16" ry="14"/>'
+            '<polygon class="acc" points="32,16 34,3 41,12"/><polygon class="acc" points="39,12 46,3 49,17"/>'
+            '<circle class="acc" cx="40" cy="22" r="10"/>'
+            '<ellipse class="eye" cx="37" cy="21" rx="1.6" ry="2.4" fill="var(--bg)"/>'
+            '<ellipse class="eye" cx="44" cy="21" rx="1.6" ry="2.4" fill="var(--bg)"/>'
+            '<polygon points="39.5,25 41.5,25 40.5,26.5" fill="var(--bg)"/>'
+            '<g stroke="var(--ac)" stroke-width=".8"><line x1="46" y1="25" x2="55" y2="23"/><line x1="46" y1="27" x2="55" y2="28"/>'
+            '<line x1="34" y1="25" x2="25" y2="23"/><line x1="34" y1="27" x2="25" y2="28"/></g>'
+            '<ellipse class="acc" cx="30" cy="55" rx="5" ry="2.5"/><ellipse class="acc" cx="39" cy="55" rx="5" ry="2.5"/></g>'
+            '<line x1="728" y1="89.5" x2="820" y2="89.5" stroke="var(--bd)"/>')
+
+
+def cat_walk(dur=18):
+    leg = lambda x, ph: (f'<line x1="{x}" y1="13" x2="{x}" y2="21" stroke="var(--ac)" stroke-width="2.4" stroke-linecap="round">'
+                         f'<animateTransform attributeName="transform" type="rotate" values="-25 {x} 13;25 {x} 13;-25 {x} 13" '
+                         f'dur=".5s" begin="{ph}s" repeatCount="indefinite"/></line>')
+    return (f'<g><animateTransform attributeName="transform" type="translate" from="-44 2" to="830 2" dur="{dur}s" repeatCount="indefinite"/>'
+            '<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -1;0 0" dur=".5s" repeatCount="indefinite"/>'
+            + leg(10, 0) + leg(14, -.25) + leg(22, -.25) + leg(26, 0) +
+            '<path d="M8 8 C2 8 1 2 5 0" fill="none" stroke="var(--ac)" stroke-width="2.4" stroke-linecap="round">'
+            '<animateTransform attributeName="transform" type="rotate" values="-12 8 8;14 8 8;-12 8 8" dur=".6s" repeatCount="indefinite"/></path>'
+            '<ellipse class="acc" cx="18" cy="10" rx="11" ry="5"/><circle class="acc" cx="31" cy="7" r="4.5"/>'
+            '<polygon class="acc" points="28,4 29,0 32,3"/><polygon class="acc" points="32,3 34,0 35,5"/>'
+            '<circle cx="33" cy="6.5" r=".9" fill="var(--bg)"/></g></g>')
+
+
 def hero():
     w, h = 830, 112
     lines = ["QAOA on Rigetti Ankaa-3 · Best Overall, Q-volution 2026",
@@ -198,9 +230,10 @@ def hero():
             '<text x="30" y="46" font-size="28" font-weight="800" letter-spacing=".01em" fill="var(--fg)">Priyansh Bhavsar</text>'
             '<text class="sub" x="30" y="66">BS Physics · Quantum Technologies, IIT Jodhpur</text>'
             f'{tl}</g>'
-            '<rect x="600" y="22" width="200" height="22" rx="11" fill="none" stroke="var(--bd)"/>'
-            '<circle class="live dot" cx="614" cy="33" r="3.5"/>'
-            '<text class="s" x="624" y="36">open to quantum research</text></svg>')
+            '<rect x="560" y="22" width="165" height="22" rx="11" fill="none" stroke="var(--bd)"/>'
+            '<circle class="live dot" cx="574" cy="33" r="3.5"/>'
+            '<text class="s" x="584" y="36">open to quantum research</text>'
+            + cat_sit() + '</svg>')
 
 
 def stack():
@@ -215,7 +248,7 @@ def stack():
             '</linearGradient><mask id="m"><rect width="830" height="26" fill="url(#f)"/></mask></defs>'
             '<rect class="bg" x=".5" y=".5" width="829" height="25" rx="8"/>'
             f'<g mask="url(#m)"><g><animateTransform attributeName="transform" type="translate" from="0 0" to="-{L} 0" '
-            f'dur="45s" repeatCount="indefinite"/>{t(0)}{t(L)}</g></g></svg>')
+            f'dur="45s" repeatCount="indefinite"/>{t(0)}{t(L)}</g></g>' + cat_walk() + '</svg>')
 
 
 def main():
