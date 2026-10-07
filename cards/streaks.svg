@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="270" height="140" viewBox="0 0 270 140"><style>
+:root{--bg:#fff;--bd:#d0d7de;--fg:#1f2328;--mu:#656d76;--ac:#0969da;--ac2:#8250df}
+@media (prefers-color-scheme:dark){:root{--bg:#0d1117;--bd:#30363d;--fg:#e6edf3;--mu:#8b949e;--ac:#58a6ff;--ac2:#bc8cff}}
+text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.bg{fill:var(--bg);stroke:var(--bd)}
+.trk{fill:var(--bd)}
+.sh{fill:var(--ac);opacity:.9}
+.t{font-size:11px;font-weight:600;letter-spacing:.09em;fill:var(--ac)}
+.k{font-size:12px;fill:var(--mu)}
+.v{font-size:12px;font-weight:600;fill:var(--fg);text-anchor:end}
+.k2{font-size:11px;fill:var(--mu)}
+.v2{font-size:11px;font-weight:600;fill:var(--fg);text-anchor:end}
+.s{font-size:10px;fill:var(--mu)}
+.sub{font-size:13px;fill:var(--mu)}
+.acc{fill:var(--ac)}
+.l0{fill:var(--bd);fill-opacity:.5}
+.l1{fill:var(--ac);fill-opacity:.28}
+.l2{fill:var(--ac);fill-opacity:.5}
+.l3{fill:var(--ac);fill-opacity:.75}
+.l4{fill:var(--ac)}
+.orb{fill:none;stroke:var(--ac);stroke-opacity:.4}
+.el{fill:var(--ac2)}
+.ring{fill:none;stroke:var(--bd);stroke-dasharray:2 5}
+.live{fill:#3fb950}
+.in{animation:rise .7s ease-out both}
+.grow{animation:sweep 1.4s .4s ease-out both}
+.cell{animation:pop .5s ease-out both}
+.now,.dot{animation:pulse 1.6s ease-in-out infinite}
+.line{opacity:0;animation:cycle 16s infinite}
+.spin{transform-origin:700px 62px;animation:spin 40s linear infinite}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes sweep{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes pop{from{opacity:0}to{opacity:1}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes cycle{0%{opacity:0;transform:translateY(6px)}4%,22%{opacity:1;transform:none}26%,100%{opacity:0;transform:translateY(-6px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}.line{opacity:0}.line.f{opacity:1}}
+</style><defs><linearGradient id="bgg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--ac);stop-opacity:.10"/><stop offset="1" style="stop-color:var(--ac2);stop-opacity:0"/></linearGradient><linearGradient id="bn" x1="0" y1="0" x2="1" y2="0"><stop offset="0" style="stop-color:var(--ac)"/><stop offset="1" style="stop-color:var(--ac2)"/></linearGradient></defs><rect class="bg" x=".5" y=".5" width="269" height="139" rx="12"/><rect x=".5" y=".5" width="269" height="139" rx="12" fill="url(#bgg)"/><g class="in" style="animation-delay:0.12s"><text class="t" x="18" y="24">ACTIVITY · 12 MONTHS</text><rect class="sh" x="18" y="31" width="24" height="2" rx="1"><animateTransform attributeName="transform" type="translate" values="0 0;210 0;0 0" dur="5s" begin="0.4s" repeatCount="indefinite"/></rect><text class="k" x="18" y="54">Contributions</text><text class="v" x="252" y="54">159</text><text class="k" x="18" y="71">Commits</text><text class="v" x="252" y="71">142</text><text class="k" x="18" y="88">Pull requests</text><text class="v" x="252" y="88">2</text><text class="k" x="18" y="105">Current streak</text><text class="v" x="252" y="105">2 days</text><text class="k" x="18" y="122">Longest streak</text><text class="v" x="252" y="122">2 days</text></g></svg>
