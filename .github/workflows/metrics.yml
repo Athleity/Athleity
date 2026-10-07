@@ -16,19 +16,24 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Cards
-        run: python3 scripts/cards.py
+        run: |
+          python3 scripts/cards.py
+          ls -la cards
         env:
-          GH_TOKEN: ${{ secrets.METRICS_TOKEN }}
+          GH_TOKEN: ${{ secrets.METRICS_TOKEN || github.token }}
           GH_USER: ${{ github.repository_owner }}
 
       - name: Commit cards
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add cards/*.svg
+          git add -f cards/*.svg
           if ! git diff --staged --quiet; then
             git commit -m "chore: update cards"
+            git pull --rebase origin main
             git push
+          else
+            echo "cards unchanged"
           fi
 
       - name: Skyline
