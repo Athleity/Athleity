@@ -1,12 +1,12 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://capsule-render.vercel.app/api?type=waving&color=0:000000,50:1A1A2E,100:0F3460&height=230&section=header&text=PRIYANSH%20BHAVSAR&fontSize=46&fontColor=58A6FF&animation=fadeIn&fontAlignY=35&desc=Quantum%20Technologies%20%E2%80%94%20IIT%20Jodhpur&descAlignY=58&descSize=18&descColor=ffffff" />
-  <source media="(prefers-color-scheme: light)" srcset="https://capsule-render.vercel.app/api?type=waving&color=0:E3F2FD,50:90CAF9,100:1565C0&height=230&section=header&text=PRIYANSH%20BHAVSAR&fontSize=46&fontColor=0D47A1&animation=fadeIn&fontAlignY=35&desc=Quantum%20Technologies%20%E2%80%94%20IIT%20Jodhpur&descAlignY=58&descSize=18&descColor=1565C0" />
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0F2027,50:2C5364,100:58A6FF&height=230&section=header&text=PRIYANSH%20BHAVSAR&fontSize=46&fontColor=ffffff&animation=fadeIn&fontAlignY=35&desc=Quantum%20Technologies%20%E2%80%94%20IIT%20Jodhpur&descAlignY=58&descSize=18" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://capsule-render.vercel.app/api?type=waving&color=0:000000,50:1A1A2E,100:0F3460&height=230&section=header&text=PRIYANSH%20BHAVSAR&fontSize=46&fontColor=58A6FF&animation=fadeIn&fontAlignY=35&desc=BS%20Physics%2C%20Quantum%20Technologies%20%E2%80%94%20IIT%20Jodhpur&descAlignY=58&descSize=18&descColor=ffffff" />
+  <source media="(prefers-color-scheme: light)" srcset="https://capsule-render.vercel.app/api?type=waving&color=0:E3F2FD,50:90CAF9,100:1565C0&height=230&section=header&text=PRIYANSH%20BHAVSAR&fontSize=46&fontColor=0D47A1&animation=fadeIn&fontAlignY=35&desc=BS%20Physics%2C%20Quantum%20Technologies%20%E2%80%94%20IIT%20Jodhpur&descAlignY=58&descSize=18&descColor=1565C0" />
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0F2027,50:2C5364,100:58A6FF&height=230&section=header&text=PRIYANSH%20BHAVSAR&fontSize=46&fontColor=ffffff&animation=fadeIn&fontAlignY=35&desc=BS%20Physics%2C%20Quantum%20Technologies%20%E2%80%94%20IIT%20Jodhpur&descAlignY=58&descSize=18" />
 </picture>
 
-<img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=500&size=20&duration=2800&pause=900&color=58A6FF&center=true&vCenter=true&width=720&lines=Running+QAOA+on+real+quantum+hardware+%E2%9A%9B%EF%B8%8F;Building+quantum+simulators+from+scratch+in+C%2B%2B;Dept+Rank+2%2F30+%7C+CGPA+8.08;Translating+research+papers+into+working+code" alt="Typing SVG" />
+<img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=500&size=20&duration=2800&pause=900&color=58A6FF&center=true&vCenter=true&width=720&lines=Running+QAOA+on+real+quantum+hardware+%E2%9A%9B%EF%B8%8F;Building+quantum+simulators+from+scratch+in+C%2B%2B;Translating+research+papers+into+working+code;Chasing+noise+instead+of+averaging+it+away" alt="Typing SVG" />
 
 <br/>
 
@@ -21,13 +21,6 @@
 ```python
 class PriyanshBhavsar:
     """BS Physics, Quantum Technologies — IIT Jodhpur"""
-
-    def __init__(self):
-        self.rank          = "2nd / 30"
-        self.cgpa          = 8.08
-        self.researching   = "Quantum ML for cancer subtype classification"
-        self.hardware      = ["IBM Quantum (156-qubit)", "Rigetti Ankaa-3"]
-        self.flagship_win  = "Best Overall Project — Q-volution 2026 (15 countries)"
 
     def philosophy(self) -> list[str]:
         return [
@@ -48,7 +41,11 @@ class PriyanshBhavsar:
   <img src="https://raw.githubusercontent.com/Athleity/Athleity/main/metrics.plugin.isocalendar.svg" width="100%" />
 </picture>
 
-<sub>Rendered nightly by GitHub Actions directly from my real contribution graph — nothing here is hand-typed.</sub>
+<br/><br/>
+
+<img src="https://github-readme-activity-graph.vercel.app/graph?username=Athleity&theme=react-dark&hide_border=true&area=true&bg_color=0D1117" width="100%"/>
+
+<sub>Both rendered directly from my real GitHub contribution data — nothing here is hand-typed.</sub>
 
 </div>
 
