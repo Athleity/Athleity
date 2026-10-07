@@ -181,7 +181,7 @@ def c_heatmap(u, WW=540, h=152):
               + "".join(f'<rect class="l{k}" x="{x0+k*13}" y="137" width="10" height="10" rx="2"/>' for k in range(5))
               + f'<text class="s" x="{x0+69}" y="145">More</text>')
     foot = f'<text class="s" x="18" y="145" style="font-size:11px">{num(cal["totalContributions"])} contributions in the last year</text>'
-    return card("Contributions", grid + scan + labels + foot + legend + surf(225, 385, 142, 3.2, 40, .55, 7), WW, h, 0)
+    return card("Contributions", grid + scan + labels + foot + legend, WW, h, 0)
 
 
 def c_streaks(u, w=270, h=152):
@@ -194,39 +194,86 @@ def c_streaks(u, w=270, h=152):
         58, 18, w), w, h, 1)
 
 
-def surf(x0, x1, yc, amp, wl, sc, dur):
-    """A wave line with a small cat on a surfboard riding along it (tilts with the slope)."""
-    N = max(8, int((x1 - x0) / 3))
-    d = "M" + " L".join(f"{x0+(x1-x0)*j/N:.1f} {yc-amp*math.sin(2*math.pi*(x1-x0)*j/N/wl):.1f}" for j in range(N + 1))
-    cat = ('<g transform="scale(%s)">' % sc +
-           '<path d="M-6 -9 C-15 -9 -15 -21 -9 -23" fill="none" stroke="var(--ac)" stroke-width="2.2" stroke-linecap="round">'
-           '<animateTransform attributeName="transform" type="rotate" values="-8 -6 -9;10 -6 -9;-8 -6 -9" dur="1.6s" repeatCount="indefinite"/></path>'
-           '<rect class="acc" x="-15" y="-2" width="30" height="3.6" rx="1.8"/>'
-           '<ellipse class="acc" cx="0" cy="-10" rx="6" ry="7.5"/>'
-           '<polygon class="acc" points="2,-24 3,-31 7,-25"/><polygon class="acc" points="6,-25 10,-30 11,-22"/>'
-           '<circle class="acc" cx="6" cy="-20" r="5.4"/>'
-           '<circle cx="7.6" cy="-20.6" r="1" fill="var(--bg)"/>'
-           '<g stroke="var(--ac)" stroke-width="2" stroke-linecap="round"><line x1="-3" y1="-13" x2="-11" y2="-17"/>'
-           '<line x1="4" y1="-12" x2="12" y2="-9"/></g></g>')
-    return (f'<path d="{d}" fill="none" stroke="var(--ac)" stroke-opacity=".75" stroke-width="1.6" stroke-linecap="round"/>'
-            f'<g><animateMotion dur="{dur}s" repeatCount="indefinite" rotate="auto" path="{d}"/>'
-            f'<animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.06;.94;1" dur="{dur}s" repeatCount="indefinite"/>{cat}</g>')
+CYCLE = 14  # seconds; the sea, the cat and the Bloch sphere all share this one loop
 
 
-def bloch(cx=705, cy=72, r=42):
-    th = math.radians(55)
-    rx, ry, oy = r * math.sin(th), r * math.sin(th) * .3, -r * math.cos(th)
-    N = 48
-    pts = [(cx + rx * math.cos(2 * math.pi * k / N), cy + oy + ry * math.sin(2 * math.pi * k / N)) for k in range(N + 1)]
-    f = lambda a: ";".join(f"{p[a]:.1f}" for p in pts)
-    anim = lambda attr, a: f'<animate attributeName="{attr}" values="{f(a)}" dur="7s" repeatCount="indefinite"/>'
+def cat_shape(sc):
+    return (f'<g transform="scale({sc})">'
+            '<path d="M-6 -9 C-15 -9 -15 -21 -9 -23" fill="none" stroke="var(--ac)" stroke-width="2.2" stroke-linecap="round">'
+            '<animateTransform attributeName="transform" type="rotate" values="-8 -6 -9;10 -6 -9;-8 -6 -9" dur="1.6s" repeatCount="indefinite"/></path>'
+            '<rect class="acc" x="-15" y="-2" width="30" height="3.6" rx="1.8"/>'
+            '<ellipse class="acc" cx="0" cy="-10" rx="6" ry="7.5"/>'
+            '<polygon class="acc" points="2,-24 3,-31 7,-25"/><polygon class="acc" points="6,-25 10,-30 11,-22"/>'
+            '<circle class="acc" cx="6" cy="-20" r="5.4"/><circle cx="7.6" cy="-20.6" r="1" fill="var(--bg)"/>'
+            '<g stroke="var(--ac)" stroke-width="2" stroke-linecap="round"><line x1="-3" y1="-13" x2="-11" y2="-17"/>'
+            '<line x1="4" y1="-12" x2="12" y2="-9"/></g></g>')
+
+
+def surf_hero(x0=30, x1=545, base=130, amp=11, sf=22, sb=34, sc=.85, dur=CYCLE):
+    """One swell rolls left to right; the cat rides its steep front face at constant height and tilt.
+    At T=.55 the cat is 'measured': it collapses and vanishes while the swell rolls on, the sea goes
+    flat, then a new swell arrives and the cat is prepared again (same loop as the Bloch sphere)."""
+    u = .7
+    pts = [(x, base - amp * math.exp(-((x / (sf if x > 0 else sb)) ** 2))) for x in range(-100, 81, 4)]
+    d = "M" + " L".join(f"{x:.1f} {y:.1f}" for x, y in pts)
+    tx0, tx1 = 20, 585
+    off = u * sf
+    cy_ = base - amp * math.exp(-u * u)
+    tilt = math.degrees(math.atan(2 * u * amp / sf * math.exp(-u * u)))
+    T = lambda vals, keys, attr="animate", extra="": f'values="{vals}" keyTimes="{keys}" dur="{dur}s" repeatCount="indefinite"'
+    move = lambda dx: (f'<animateTransform attributeName="transform" type="translate" values="{tx0+dx} 0;{tx1+dx} 0;{tx0+dx} 0;{tx0+dx} 0" '
+                       f'keyTimes="0;.75;.76;1" dur="{dur}s" repeatCount="indefinite"/>')
+    fade_sea = (f'<animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.02;.72;.75;1" dur="{dur}s" repeatCount="indefinite"/>')
+    sea = (f'<defs><clipPath id="sea"><rect x="{x0}" y="95" width="{x1-x0}" height="45"/></clipPath></defs>'
+           f'<line x1="{x0}" y1="{base}" x2="{x1}" y2="{base}" stroke="var(--bd)" stroke-width="1.4" stroke-linecap="round"/>'
+           f'<g clip-path="url(#sea)"><g>{move(0)}{fade_sea}'
+           f'<path d="{d}" fill="none" stroke="var(--ac)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g></g>')
+    cat = (f'<g>{move(off)}<g><animateTransform attributeName="transform" type="translate" values="0 {cy_:.1f};0 {cy_-1.2:.1f};0 {cy_:.1f}" '
+           f'dur="1.4s" repeatCount="indefinite"/>'
+           f'<g><animateTransform attributeName="transform" type="scale" values="0;1;1;0;0" keyTimes="0;.08;.53;.60;1" dur="{dur}s" repeatCount="indefinite"/>'
+           f'<animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.08;.53;.60;1" dur="{dur}s" repeatCount="indefinite"/>'
+           f'<g transform="rotate({tilt:.1f})">{cat_shape(sc)}</g></g></g></g>')
+    xm = tx0 + (tx1 - tx0) * .57 / .75 + off
+    burst = (f'<circle cx="{xm:.1f}" cy="{cy_-9:.1f}" fill="none" stroke="var(--ac)">'
+             f'<animate attributeName="r" values="3;3;3;15;15" keyTimes="0;.549;.55;.62;1" dur="{dur}s" repeatCount="indefinite"/>'
+             f'<animate attributeName="stroke-opacity" values="0;0;.9;0;0" keyTimes="0;.549;.55;.62;1" dur="{dur}s" repeatCount="indefinite"/></circle>')
+    return sea + cat + burst
+
+
+def bloch(cx=705, cy=72, r=42, dur=CYCLE):
+    """Precessing state vector. At T=.55 it is measured: snaps to |0>, rests there, then is re-prepared."""
+    th0, M = math.radians(55), 112
+    ease = lambda e: e * e * (3 - 2 * e)
+    pts = []
+    for k in range(M + 1):
+        t = k / M
+        if t < .55:
+            th, ph = th0, 2 * math.pi * 1.1 * t / .55
+        elif t < .60:
+            th, ph = th0 * (1 - ease((t - .55) / .05)), 2 * math.pi * 1.1
+        elif t < .88:
+            th, ph = 0, 0
+        elif t < .94:
+            th, ph = th0 * ease((t - .88) / .06), 0
+        else:
+            th, ph = th0, 0
+        pts.append((cx + r * math.sin(th) * math.cos(ph), cy - r * math.cos(th) + r * .3 * math.sin(th) * math.sin(ph)))
+    keys = ";".join(f"{k/M:.4f}" for k in range(M + 1))
+    anim = lambda attr, a: (f'<animate attributeName="{attr}" values="{";".join(f"{p[a]:.1f}" for p in pts)}" '
+                            f'keyTimes="{keys}" dur="{dur}s" repeatCount="indefinite"/>')
+    rx, oy = r * math.sin(th0), -r * math.cos(th0)
     return (f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="url(#sph)" stroke="var(--ac)" stroke-opacity=".55"/>'
             f'<ellipse cx="{cx}" cy="{cy}" rx="{r}" ry="{r*.3:.1f}" fill="none" stroke="var(--bd)"/>'
             f'<ellipse cx="{cx}" cy="{cy}" rx="{r*.3:.1f}" ry="{r}" fill="none" stroke="var(--bd)"/>'
             f'<line x1="{cx}" y1="{cy-r-7}" x2="{cx}" y2="{cy+r+7}" stroke="var(--bd)"/>'
             f'<line x1="{cx-r-7}" y1="{cy}" x2="{cx+r+7}" y2="{cy}" stroke="var(--bd)"/>'
-            f'<ellipse cx="{cx}" cy="{cy+oy:.1f}" rx="{rx:.1f}" ry="{ry:.1f}" fill="none" stroke="var(--ac)" stroke-opacity=".4" stroke-dasharray="2 3"/>'
+            f'<ellipse cx="{cx}" cy="{cy+oy:.1f}" rx="{rx:.1f}" ry="{rx*.3:.1f}" fill="none" stroke="var(--ac)" stroke-opacity=".4" stroke-dasharray="2 3"/>'
             f'<text class="s mono" x="{cx+5}" y="{cy-r-9}">|0⟩</text><text class="s mono" x="{cx+5}" y="{cy+r+16}">|1⟩</text>'
+            f'<circle cx="{cx}" cy="{cy}" fill="none" stroke="var(--ac)">'
+            f'<animate attributeName="r" values="{r};{r};{r};{r+14};{r+14}" keyTimes="0;.549;.55;.64;1" dur="{dur}s" repeatCount="indefinite"/>'
+            f'<animate attributeName="stroke-opacity" values="0;0;.7;0;0" keyTimes="0;.549;.55;.64;1" dur="{dur}s" repeatCount="indefinite"/></circle>'
+            f'<circle cx="{cx}" cy="{cy-r}" r="4.5" fill="none" stroke="var(--ac)">'
+            f'<animate attributeName="stroke-opacity" values="0;0;1;1;0;0" keyTimes="0;.58;.62;.88;.92;1" dur="{dur}s" repeatCount="indefinite"/></circle>'
             f'<line x1="{cx}" y1="{cy}" x2="{pts[0][0]:.1f}" y2="{pts[0][1]:.1f}" stroke="var(--ac)" stroke-width="1.8" stroke-linecap="round">'
             f'{anim("x2", 0)}{anim("y2", 1)}</line>'
             f'<circle r="3.4" cx="{pts[0][0]:.1f}" cy="{pts[0][1]:.1f}" fill="var(--ac)">{anim("cx", 0)}{anim("cy", 1)}</circle>'
@@ -244,7 +291,7 @@ def hero():
                  for i, t in enumerate(lines))
     return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}"><style>{CSS}</style>{DEFS}'
             f'<rect class="bg" x=".5" y=".5" width="{w-1}" height="{h-1}" rx="12"/>'
-                        f'<rect class="acc" x="0.5" y="24" width="4" height="44" rx="2"/>{bloch()}{surf(30, 545, 121, 7, 86, 1, 10)}<g>'
+                        f'<rect class="acc" x="0.5" y="24" width="4" height="44" rx="2"/>{bloch()}{surf_hero()}<g>'
             '<text x="30" y="48" font-size="30" font-weight="800" letter-spacing=".01em" fill="var(--fg)">Priyansh Bhavsar</text>'
             '<text class="sub" x="30" y="69">BS Physics · Quantum Technologies, IIT Jodhpur</text>'
             f'{tl}</g></svg>')
