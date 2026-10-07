@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="270" height="190" viewBox="0 0 270 190"><style>
+:root{--bg:#fff;--bd:#d0d7de;--fg:#1f2328;--mu:#656d76;--ac:#0969da}
+@media (prefers-color-scheme:dark){:root{--bg:#0d1117;--bd:#30363d;--fg:#e6edf3;--mu:#8b949e;--ac:#58a6ff}}
+text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif}
+.bg{fill:var(--bg);stroke:var(--bd)}
+.trk{fill:var(--bd)}
+.bar{fill:var(--ac);opacity:.85}
+.t{font-size:11px;font-weight:600;letter-spacing:.09em;fill:var(--ac)}
+.k{font-size:12px;fill:var(--mu)}
+.v{font-size:12px;font-weight:600;fill:var(--fg);text-anchor:end}
+.big{font-size:26px;font-weight:700;fill:var(--fg)}
+.s{font-size:11px;fill:var(--mu)}
+</style><rect class="bg" x=".5" y=".5" width="269" height="189" rx="12"/><text class="t" x="18" y="30">ACTIVITY · 12 MONTHS</text><text class="k" x="18" y="62">Commits</text><text class="v" x="252" y="62">139</text><text class="k" x="18" y="84">Pull requests</text><text class="v" x="252" y="84">2</text><text class="k" x="18" y="106">Issues</text><text class="v" x="252" y="106">0</text><text class="k" x="18" y="128">Reviews</text><text class="v" x="252" y="128">0</text><rect class="bar" x="18.0" y="173.0" width="15.8" height="3.0" rx="2"/><rect class="bar" x="37.8" y="174.0" width="15.8" height="2.0" rx="2"/><rect class="bar" x="57.7" y="166.9" width="15.8" height="9.1" rx="2"/><rect class="bar" x="77.5" y="174.0" width="15.8" height="2.0" rx="2"/><rect class="bar" x="97.3" y="174.0" width="15.8" height="2.0" rx="2"/><rect class="bar" x="117.2" y="154.7" width="15.8" height="21.3" rx="2"/><rect class="bar" x="137.0" y="174.0" width="15.8" height="2.0" rx="2"/><rect class="bar" x="156.8" y="174.0" width="15.8" height="2.0" rx="2"/><rect class="bar" x="176.7" y="174.0" width="15.8" height="2.0" rx="2"/><rect class="bar" x="196.5" y="174.0" width="15.8" height="2.0" rx="2"/><rect class="bar" x="216.3" y="174.0" width="15.8" height="2.0" rx="2"/><rect class="bar" x="236.2" y="146.0" width="15.8" height="30.0" rx="2"/></svg>
