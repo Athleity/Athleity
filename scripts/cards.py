@@ -208,54 +208,56 @@ def cat_shape(sc):
             '<line x1="4" y1="-12" x2="12" y2="-9"/></g></g>')
 
 
-def surf_hero(x0=30, x1=545, base=130, amp=11, sf=22, sb=34, sc=.85, dur=CYCLE):
-    """One swell rolls left to right; the cat rides its steep front face at constant height and tilt.
-    At T=.55 the cat is 'measured': it collapses and vanishes while the swell rolls on, the sea goes
-    flat, then a new swell arrives and the cat is prepared again (same loop as the Bloch sphere)."""
-    u = .7
-    pts = [(x, base - amp * math.exp(-((x / (sf if x > 0 else sb)) ** 2))) for x in range(-100, 81, 4)]
-    d = "M" + " L".join(f"{x:.1f} {y:.1f}" for x, y in pts)
-    tx0, tx1 = 20, 585
-    off = u * sf
-    cy_ = base - amp * math.exp(-u * u)
-    tilt = math.degrees(math.atan(2 * u * amp / sf * math.exp(-u * u)))
-    T = lambda vals, keys, attr="animate", extra="": f'values="{vals}" keyTimes="{keys}" dur="{dur}s" repeatCount="indefinite"'
-    move = lambda dx: (f'<animateTransform attributeName="transform" type="translate" values="{tx0+dx} 0;{tx1+dx} 0;{tx0+dx} 0;{tx0+dx} 0" '
-                       f'keyTimes="0;.75;.76;1" dur="{dur}s" repeatCount="indefinite"/>')
-    fade_sea = (f'<animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.02;.72;.75;1" dur="{dur}s" repeatCount="indefinite"/>')
-    sea = (f'<defs><clipPath id="sea"><rect x="{x0}" y="95" width="{x1-x0}" height="45"/></clipPath></defs>'
-           f'<line x1="{x0}" y1="{base}" x2="{x1}" y2="{base}" stroke="var(--bd)" stroke-width="1.4" stroke-linecap="round"/>'
-           f'<g clip-path="url(#sea)"><g>{move(0)}{fade_sea}'
-           f'<path d="{d}" fill="none" stroke="var(--ac)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g></g>')
-    cat = (f'<g>{move(off)}<g><animateTransform attributeName="transform" type="translate" values="0 {cy_:.1f};0 {cy_-1.2:.1f};0 {cy_:.1f}" '
-           f'dur="1.4s" repeatCount="indefinite"/>'
-           f'<g><animateTransform attributeName="transform" type="scale" values="0;1;1;0;0" keyTimes="0;.08;.53;.60;1" dur="{dur}s" repeatCount="indefinite"/>'
-           f'<animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.08;.53;.60;1" dur="{dur}s" repeatCount="indefinite"/>'
+def surf_hero(x0=30, x1=545, base=130, amp=6, wl=110, sc=.85, dur=CYCLE):
+    """A full wave spans the card and travels right. The cat rides one face of it, moving with the wave.
+    At T=.62 the cat is 'measured' and vanishes, the wave flattens into a straight green line, stays flat,
+    then a new wave is drawn in from the left and the cat arrives again (same loop as the Bloch sphere)."""
+    W, k = x1 - x0, 2 * math.pi / wl
+    P = dur / 9                       # 9 wave periods per loop, so the wave phase is identical every loop
+    c = wl / P                        # wave speed in px/s
+    t_in, xs = .14 * dur, 38          # cat steps onto the wave at x=xs, at T=.14
+    tx0 = (xs - wl / 2 - c * t_in) % wl
+    d = "M" + " L".join(f"{x:.0f} {base - amp * math.sin(k * x):.1f}" for x in range(-220, 801, 5))
+    tilt = math.degrees(math.atan(amp * k))
+    kt = "0;.08;.16;.72;.7201;1"
+    f = [0, 0, 1, 1, 0, 0]
+    anim = lambda attr, vals: f'<animate attributeName="{attr}" values="{";".join(f"{v:.1f}" for v in vals)}" keyTimes="{kt}" dur="{dur}s" repeatCount="indefinite"/>'
+    clips = (f'<defs><clipPath id="cB"><rect x="{x0}" y="92" width="0" height="48">{anim("width", [W*v for v in f])}</rect></clipPath>'
+             f'<clipPath id="cA"><rect x="{x0}" y="92" width="{W}" height="48">{anim("x", [x0+W*v for v in f])}{anim("width", [W*(1-v) for v in f])}</rect></clipPath></defs>')
+    flat = (f'<g clip-path="url(#cA)"><line x1="{x0}" y1="{base}" x2="{x1}" y2="{base}" stroke="var(--ac)" stroke-width="1.8" stroke-linecap="round"/></g>')
+    wave = (f'<g clip-path="url(#cB)"><g transform="translate(0 {base})"><g>'
+            f'<animateTransform attributeName="transform" type="scale" values="1 .001;1 .001;1 1;1 1;1 .001;1 .001" keyTimes="0;.079;.08;.62;.72;1" dur="{dur}s" repeatCount="indefinite"/>'
+            f'<g transform="translate(0 {-base})"><g><animateTransform attributeName="transform" type="translate" values="{tx0:.1f} 0;{tx0+wl:.1f} 0" dur="{P:.4f}s" repeatCount="indefinite"/>'
+            f'<path d="{d}" fill="none" stroke="var(--ac)" stroke-width="1.8" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></g></g></g></g></g>')
+    x_end = xs + c * (.62 - .14) * dur
+    cat = (f'<g><animateTransform attributeName="transform" type="translate" values="{xs} 0;{xs} 0;{x_end:.1f} 0;{x_end:.1f} 0" keyTimes="0;.14;.62;1" dur="{dur}s" repeatCount="indefinite"/>'
+           f'<g><animateTransform attributeName="transform" type="translate" values="0 {base-1};0 {base-2.2};0 {base-1}" dur="1.4s" repeatCount="indefinite"/>'
+           f'<g><animateTransform attributeName="transform" type="scale" values="0;0;1;1;0;0" keyTimes="0;.14;.17;.62;.67;1" dur="{dur}s" repeatCount="indefinite"/>'
+           f'<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.14;.17;.62;.67;1" dur="{dur}s" repeatCount="indefinite"/>'
            f'<g transform="rotate({tilt:.1f})">{cat_shape(sc)}</g></g></g></g>')
-    xm = tx0 + (tx1 - tx0) * .57 / .75 + off
-    burst = (f'<circle cx="{xm:.1f}" cy="{cy_-9:.1f}" fill="none" stroke="var(--ac)">'
-             f'<animate attributeName="r" values="3;3;3;15;15" keyTimes="0;.549;.55;.62;1" dur="{dur}s" repeatCount="indefinite"/>'
-             f'<animate attributeName="stroke-opacity" values="0;0;.9;0;0" keyTimes="0;.549;.55;.62;1" dur="{dur}s" repeatCount="indefinite"/></circle>')
-    return sea + cat + burst
+    burst = (f'<circle cx="{x_end:.1f}" cy="{base-12}" fill="none" stroke="var(--ac)">'
+             f'<animate attributeName="r" values="3;3;3;15;15" keyTimes="0;.619;.62;.70;1" dur="{dur}s" repeatCount="indefinite"/>'
+             f'<animate attributeName="stroke-opacity" values="0;0;.9;0;0" keyTimes="0;.619;.62;.70;1" dur="{dur}s" repeatCount="indefinite"/></circle>')
+    return clips + flat + wave + cat + burst
 
 
 def bloch(cx=705, cy=72, r=42, dur=CYCLE):
-    """Precessing state vector. At T=.55 it is measured: snaps to |0>, rests there, then is re-prepared."""
+    """Precessing state vector. At T=.62 it is measured: snaps to |0>, rests there, then is re-prepared."""
     th0, M = math.radians(55), 112
     ease = lambda e: e * e * (3 - 2 * e)
     pts = []
     for k in range(M + 1):
         t = k / M
-        if t < .55:
-            th, ph = th0, 2 * math.pi * 1.1 * t / .55
-        elif t < .60:
-            th, ph = th0 * (1 - ease((t - .55) / .05)), 2 * math.pi * 1.1
-        elif t < .88:
+        if t < .08:
             th, ph = 0, 0
-        elif t < .94:
-            th, ph = th0 * ease((t - .88) / .06), 0
+        elif t < .14:
+            th, ph = th0 * ease((t - .08) / .06), 0
+        elif t < .62:
+            th, ph = th0, 2 * math.pi * 1.1 * (t - .14) / .48
+        elif t < .67:
+            th, ph = th0 * (1 - ease((t - .62) / .05)), 2 * math.pi * 1.1
         else:
-            th, ph = th0, 0
+            th, ph = 0, 0
         pts.append((cx + r * math.sin(th) * math.cos(ph), cy - r * math.cos(th) + r * .3 * math.sin(th) * math.sin(ph)))
     keys = ";".join(f"{k/M:.4f}" for k in range(M + 1))
     anim = lambda attr, a: (f'<animate attributeName="{attr}" values="{";".join(f"{p[a]:.1f}" for p in pts)}" '
@@ -269,10 +271,10 @@ def bloch(cx=705, cy=72, r=42, dur=CYCLE):
             f'<ellipse cx="{cx}" cy="{cy+oy:.1f}" rx="{rx:.1f}" ry="{rx*.3:.1f}" fill="none" stroke="var(--ac)" stroke-opacity=".4" stroke-dasharray="2 3"/>'
             f'<text class="s mono" x="{cx+5}" y="{cy-r-9}">|0⟩</text><text class="s mono" x="{cx+5}" y="{cy+r+16}">|1⟩</text>'
             f'<circle cx="{cx}" cy="{cy}" fill="none" stroke="var(--ac)">'
-            f'<animate attributeName="r" values="{r};{r};{r};{r+14};{r+14}" keyTimes="0;.549;.55;.64;1" dur="{dur}s" repeatCount="indefinite"/>'
-            f'<animate attributeName="stroke-opacity" values="0;0;.7;0;0" keyTimes="0;.549;.55;.64;1" dur="{dur}s" repeatCount="indefinite"/></circle>'
+            f'<animate attributeName="r" values="{r};{r};{r};{r+14};{r+14}" keyTimes="0;.619;.62;.70;1" dur="{dur}s" repeatCount="indefinite"/>'
+            f'<animate attributeName="stroke-opacity" values="0;0;.7;0;0" keyTimes="0;.619;.62;.70;1" dur="{dur}s" repeatCount="indefinite"/></circle>'
             f'<circle cx="{cx}" cy="{cy-r}" r="4.5" fill="none" stroke="var(--ac)">'
-            f'<animate attributeName="stroke-opacity" values="0;0;1;1;0;0" keyTimes="0;.58;.62;.88;.92;1" dur="{dur}s" repeatCount="indefinite"/></circle>'
+            f'<animate attributeName="stroke-opacity" values="1;1;0;0;1;1" keyTimes="0;.07;.10;.65;.69;1" dur="{dur}s" repeatCount="indefinite"/></circle>'
             f'<line x1="{cx}" y1="{cy}" x2="{pts[0][0]:.1f}" y2="{pts[0][1]:.1f}" stroke="var(--ac)" stroke-width="1.8" stroke-linecap="round">'
             f'{anim("x2", 0)}{anim("y2", 1)}</line>'
             f'<circle r="3.4" cx="{pts[0][0]:.1f}" cy="{pts[0][1]:.1f}" fill="var(--ac)">{anim("cx", 0)}{anim("cy", 1)}</circle>'
