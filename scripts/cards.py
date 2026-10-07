@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Animated profile cards (SVG) from the GitHub API. Standard library only.
+"""Profile cards (SVG) from the GitHub API. Standard library only.
 Usage: GH_TOKEN=... GH_USER=Athleity python3 scripts/cards.py   (add --demo for sample data)"""
 import datetime, html, json, os, sys, urllib.request
 
@@ -10,42 +10,37 @@ OUT, MONTHS = "cards", "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split()
 FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif"
 MONO = "ui-monospace,SFMono-Regular,Menlo,Consolas,monospace"
 CSS = f"""
-:root{{--bg:#fff;--bd:#d0d7de;--fg:#1f2328;--mu:#656d76;--ac:#0969da;--ac2:#8250df}}
-@media (prefers-color-scheme:dark){{:root{{--bg:#0d1117;--bd:#30363d;--fg:#e6edf3;--mu:#8b949e;--ac:#58a6ff;--ac2:#bc8cff}}}}
+:root{{--bg:#fff;--bd:#d1d9e0;--fg:#1f2328;--mu:#59636e;--ac:#1a7f37;--ac2:#2da44e}}
+@media (prefers-color-scheme:dark){{:root{{--bg:#0d1117;--bd:#30363d;--fg:#e6edf3;--mu:#8b949e;--ac:#3fb950;--ac2:#56d364}}}}
 text{{font-family:{FONT}}}
 .mono{{font-family:{MONO}}}
 .bg{{fill:var(--bg);stroke:var(--bd)}}
 .trk{{fill:var(--bd)}}
-.sh{{fill:var(--ac);opacity:.9}}
-.t{{font-size:11px;font-weight:600;letter-spacing:.09em;fill:var(--ac)}}
-.k{{font-size:12px;fill:var(--mu)}}
-.v{{font-size:12px;font-weight:600;fill:var(--fg);text-anchor:end}}
+.t{{font-family:{MONO};font-size:11px;font-weight:600;letter-spacing:.06em;fill:var(--fg)}}
 .k2{{font-size:11px;fill:var(--mu)}}
 .v2{{font-size:11px;font-weight:600;fill:var(--fg);text-anchor:end}}
+.k{{font-size:12px;fill:var(--mu)}}
+.v{{font-size:12px;font-weight:600;fill:var(--fg);text-anchor:end}}
 .s{{font-size:10px;fill:var(--mu)}}
 .sub{{font-size:13px;fill:var(--mu)}}
+.big{{font-family:{MONO};font-size:26px;font-weight:700;fill:var(--ac)}}
 .acc{{fill:var(--ac)}}
-.l0{{fill:var(--bd);fill-opacity:.5}}
-.l1{{fill:var(--ac);fill-opacity:.28}}
+.l0{{fill:var(--bd);fill-opacity:.55}}
+.l1{{fill:var(--ac);fill-opacity:.3}}
 .l2{{fill:var(--ac);fill-opacity:.5}}
 .l3{{fill:var(--ac);fill-opacity:.75}}
 .l4{{fill:var(--ac)}}
-.orb{{fill:none;stroke:var(--ac);stroke-opacity:.4}}
-.el{{fill:var(--ac2)}}
-.ring{{fill:none;stroke:var(--bd);stroke-dasharray:2 5}}
-.live{{fill:#3fb950}}
-.in{{animation:rise .7s ease-out both}}
-.grow{{animation:sweep 1.4s .4s ease-out both}}
+.live{{fill:var(--ac2)}}
+.in{{animation:rise .6s ease-out both}}
+.grow{{transform-box:fill-box;transform-origin:left;animation:sweep 1.2s .4s ease-out both}}
 .cell{{animation:pop .5s ease-out both}}
 .now,.dot{{animation:pulse 1.6s ease-in-out infinite}}
 .line{{opacity:0;animation:cycle 16s infinite}}
-.spin{{transform-origin:700px 62px;animation:spin 40s linear infinite}}
-@keyframes rise{{from{{opacity:0;transform:translateY(8px)}}to{{opacity:1;transform:none}}}}
+@keyframes rise{{from{{opacity:0;transform:translateY(6px)}}to{{opacity:1;transform:none}}}}
 @keyframes sweep{{from{{transform:scaleX(0)}}to{{transform:scaleX(1)}}}}
 @keyframes pop{{from{{opacity:0}}to{{opacity:1}}}}
 @keyframes pulse{{0%,100%{{opacity:1}}50%{{opacity:.3}}}}
-@keyframes cycle{{0%{{opacity:0;transform:translateY(6px)}}4%,22%{{opacity:1;transform:none}}26%,100%{{opacity:0;transform:translateY(-6px)}}}}
-@keyframes spin{{to{{transform:rotate(360deg)}}}}
+@keyframes cycle{{0%{{opacity:0}}4%,22%{{opacity:1}}26%,100%{{opacity:0}}}}
 @media (prefers-reduced-motion:reduce){{*{{animation:none!important}}.line{{opacity:0}}.line.f{{opacity:1}}}}
 """
 
@@ -89,22 +84,28 @@ def fetch():
     return data["data"]["user"]
 
 
-DEFS = ('<defs><linearGradient id="bgg" x1="0" y1="0" x2="1" y2="1">'
-        '<stop offset="0" style="stop-color:var(--ac);stop-opacity:.10"/>'
-        '<stop offset="1" style="stop-color:var(--ac2);stop-opacity:0"/></linearGradient>'
-        '<linearGradient id="bn" x1="0" y1="0" x2="1" y2="0">'
-        '<stop offset="0" style="stop-color:var(--ac)"/><stop offset="1" style="stop-color:var(--ac2)"/></linearGradient></defs>')
+def repo_rows(name):
+    """Real facts from the repo (language, stars, last push). Nothing invented."""
+    try:
+        if DEMO:
+            raise RuntimeError
+        req = urllib.request.Request(f"https://api.github.com/repos/{USER}/{name}",
+                                     headers={"Authorization": f"bearer {TOKEN}", "User-Agent": "profile-cards"})
+        with urllib.request.urlopen(req, timeout=30) as r:
+            d = json.load(r)
+        p = d["pushed_at"]
+        return [("Language", d.get("language") or "n/a"), ("Stars", str(d["stargazers_count"])),
+                ("Updated", f"{MONTHS[int(p[5:7])-1]} {p[:4]}")]
+    except Exception:
+        return [("Language", "Python"), ("Stars", "0"), ("Updated", "recently")]
 
 
 def card(title, body, w, h, i=0, m=18):
-    return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}"><style>{CSS}</style>{DEFS}'
-            f'<rect class="bg" x=".5" y=".5" width="{w-1}" height="{h-1}" rx="12"/>'
-            f'<rect x=".5" y=".5" width="{w-1}" height="{h-1}" rx="12" fill="url(#bgg)"/>'
-            f'<g class="in" style="animation-delay:{i*0.12:.2f}s">'
-            f'<text class="t" x="{m}" y="24">{esc(title.upper())}</text>'
-            f'<rect class="sh" x="{m}" y="31" width="24" height="2" rx="1">'
-            f'<animateTransform attributeName="transform" type="translate" values="0 0;{w-2*m-24} 0;0 0" '
-            f'dur="5s" begin="{i*0.4:.1f}s" repeatCount="indefinite"/></rect>{body}</g></svg>')
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}"><style>{CSS}</style>'
+            f'<rect class="bg" x=".5" y=".5" width="{w-1}" height="{h-1}" rx="10"/>'
+            f'<g class="in" style="animation-delay:{i*0.1:.2f}s">'
+            f'<rect class="acc" x="{m}" y="16" width="7" height="7" rx="1.5"/>'
+            f'<text class="t" x="{m+13}" y="24">{esc(title.upper())}</text>{body}</g></svg>')
 
 
 def rows(pairs, y, dy, w, m=18, k="k", v="v"):
@@ -115,13 +116,13 @@ def rows(pairs, y, dy, w, m=18, k="k", v="v"):
 def project(title, big, sub, pairs, i, bar=None, w=200, h=150):
     for a, b in pairs:
         assert len(a) + len(b) <= 29, (a, b)
-    assert len(sub) <= 32, sub
+    assert len(sub) <= 34, sub
     b = ""
     if bar:
-        b = (f'<rect class="trk" x="14" y="68" width="{w-28}" height="4" rx="2"/>'
-             f'<rect class="grow" style="transform-origin:14px 0" x="14" y="68" width="{(w-28)*bar:.1f}" height="4" rx="2" fill="url(#bn)"/>')
-    body = (f'<text x="14" y="62" font-size="24" font-weight="800" fill="url(#bn)">{esc(big)}</text>{b}'
-            f'<text class="s" x="14" y="88">{esc(sub)}</text>' + rows(pairs, 108, 16, w, 14, "k2", "v2"))
+        b = (f'<rect class="trk" x="14" y="68" width="{w-28}" height="3" rx="1.5"/>'
+             f'<rect class="grow acc" x="14" y="68" width="{(w-28)*bar:.1f}" height="3" rx="1.5"/>')
+    body = (f'<text class="big" x="14" y="60">{esc(big)}</text>{b}'
+            f'<text class="s" x="14" y="86">{esc(sub)}</text>' + rows(pairs, 107, 15, w, 14, "k2", "v2"))
     return card(title, body, w, h, i, 14)
 
 
@@ -184,41 +185,28 @@ def c_streaks(u, w=270, h=140):
 
 
 def hero():
-    w, h, cy = 830, 124, 62
-    lines = ["Running QAOA on real quantum hardware", "Building quantum simulators from scratch in C++",
-             "Translating research papers into working code", "Chasing noise instead of averaging it away"]
-    tl = "".join(f'<text class="mono line{" f" if i == 0 else ""}" x="30" y="88" font-size="13" style="animation-delay:{i*4}s">'
-                 f'<tspan class="acc">›</tspan> {esc(t)}</text>' for i, t in enumerate(lines))
-    orbits = "".join(
-        f'<g transform="rotate({a} 700 {cy})"><ellipse class="orb" cx="700" cy="{cy}" rx="52" ry="18"/>'
-        f'<circle class="el" r="3"><animateMotion dur="{3+a/60:.1f}s" repeatCount="indefinite" '
-        f'path="M648,{cy} a52,18 0 1,0 104,0 a52,18 0 1,0 -104,0"/></circle></g>' for a in (0, 60, 120))
+    w, h = 830, 112
+    lines = ["QAOA on Rigetti Ankaa-3 · Best Overall, Q-volution 2026",
+             "Lightning-Lite: C++20 statevector simulator, 3.5x vs Qiskit Aer",
+             "Now: surface-code quantum error correction",
+             "Translating papers into working code"]
+    tl = "".join(f'<text class="mono line{" f" if i == 0 else ""}" x="30" y="84" font-size="13" fill="var(--fg)" '
+                 f'style="animation-delay:{i*4}s"><tspan class="acc">$</tspan> {esc(t)}</text>' for i, t in enumerate(lines))
     return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}"><style>{CSS}</style>'
-            '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="0" spreadMethod="reflect">'
-            '<stop offset="0" style="stop-color:var(--ac)"/><stop offset=".5" style="stop-color:var(--ac2)"/>'
-            '<stop offset="1" style="stop-color:var(--ac)"/>'
-            '<animate attributeName="x1" values="0;1" dur="5s" repeatCount="indefinite"/>'
-            '<animate attributeName="x2" values="1;2" dur="5s" repeatCount="indefinite"/></linearGradient>'
-            '<radialGradient id="rg"><stop offset="0" style="stop-color:var(--ac);stop-opacity:.2"/>'
-            '<stop offset="1" style="stop-color:var(--ac);stop-opacity:0"/></radialGradient></defs>'
-            f'<rect class="bg" x=".5" y=".5" width="{w-1}" height="{h-1}" rx="14"/>'
-            f'<circle cx="700" cy="{cy}" r="115" fill="url(#rg)"/><g class="in">'
-            '<text x="30" y="44" font-size="28" font-weight="800" letter-spacing=".02em" fill="url(#g)">PRIYANSH BHAVSAR</text>'
-            '<text class="sub" x="30" y="64">BS Physics · Quantum Technologies — IIT Jodhpur</text>'
-            f'{tl}'
-            '<rect x="30" y="98" width="290" height="18" rx="9" fill="none" stroke="var(--bd)"/>'
-            '<circle class="live dot" cx="42" cy="107" r="3"/>'
-            '<text class="s" x="52" y="110">building Lightning-Lite · surface-code QEC</text></g>'
-            f'<circle class="ring" cx="700" cy="{cy}" r="56"/><g class="spin">{orbits}</g>'
-            f'<circle class="acc dot" cx="700" cy="{cy}" r="4.5"/>'
-            f'<text class="s mono" x="762" y="{cy+4}" style="font-size:12px">|0⟩</text>'
-            f'<text class="s mono" x="612" y="{cy+4}" style="font-size:12px">|1⟩</text></svg>')
+            f'<rect class="bg" x=".5" y=".5" width="{w-1}" height="{h-1}" rx="12"/>'
+            f'<rect class="acc" x="0.5" y="22" width="4" height="40" rx="2"/><g class="in">'
+            '<text x="30" y="46" font-size="28" font-weight="800" letter-spacing=".01em" fill="var(--fg)">Priyansh Bhavsar</text>'
+            '<text class="sub" x="30" y="66">BS Physics · Quantum Technologies, IIT Jodhpur</text>'
+            f'{tl}</g>'
+            '<rect x="600" y="22" width="200" height="22" rx="11" fill="none" stroke="var(--bd)"/>'
+            '<circle class="live dot" cx="614" cy="33" r="3.5"/>'
+            '<text class="s" x="624" y="36">open to quantum research</text></svg>')
 
 
 def stack():
     items = ["Python", "C++20", "Qiskit", "PennyLane", "pyQuil", "Cirq", "QuTiP", "Stim", "NumPy", "SciPy",
              "OpenMP", "CUDA", "SIMD", "pybind11", "PostgreSQL", "PyTorch"]
-    seg = " ◆ ".join(items) + " ◆ "
+    seg = " / ".join(items) + " / "
     L = round(len(seg) * 7.2)
     t = lambda x: f'<text class="s mono" x="{x}" y="17" textLength="{L}" lengthAdjust="spacing" style="font-size:12px">{seg}</text>'
     return ('<svg xmlns="http://www.w3.org/2000/svg" width="830" height="26" viewBox="0 0 830 26">'
@@ -235,15 +223,15 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     cards = {
         "hero": hero(), "stack": stack(), "heatmap": c_heatmap(u), "streaks": c_streaks(u),
-        "gridiq": project("GridIQ", "96.03%", "ratio on Rigetti Ankaa-3 QPU", [
+        "gridiq": project("GridIQ", "96.03%", "approx. ratio · Rigetti Ankaa-3", [
             ("Q-volution 2026", "Best Overall"), ("Best simulated", "97.31%"), ("vs vanilla SA", "+3.8%")], 2, bar=0.9603),
         "lightning": project("Lightning-Lite", "3.5×", "faster than Qiskit Aer", [
             ("Memory bandwidth", "94%"), ("Validation", "gate-by-gate"), ("Stack", "C++20 · SIMD")], 3),
-        # EDIT: put a real Tox21 result in `big` (e.g. "0.82") and `sub` (e.g. "mean ROC-AUC")
-        "tox21": project("Tox21 · Hybrid QML", "Hybrid", "quantum-classical toxicity model", [
-            ("Dataset", "Tox21"), ("Task", "toxicity prediction"), ("Model", "hybrid quantum")], 4),
-        "entangle": project("Entanglement", "99.8%", "fidelity on IBM Quantum", [
-            ("Explores", "entanglement"), ("Studies", "noise"), ("Validated on", "IBM hardware")], 5, bar=0.998),
+        # Add a real result later: change "Hybrid" and the sub line, e.g. "0.82" / "mean ROC-AUC"
+        "tox21": project("Tox21 Hybrid", "Hybrid", "quantum-classical toxicity model",
+                         repo_rows("tox21-hybrid-quantum-model"), 4),
+        "entangle": project("Entanglement", "Qubits", "quantum entanglement project",
+                            repo_rows("Quantum-entanglement-project"), 5),
     }
     for name, svg in cards.items():
         with open(f"{OUT}/{name}.svg", "w", encoding="utf-8") as f:
