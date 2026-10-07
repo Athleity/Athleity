@@ -1,21 +1,7 @@
-> Want to know what I'm currently working on ?
-> Checkout [Lightning-Lite](https://github.com/Athleity/lightning-lite-quantum-simulator)
->
-> *PS: BS Physics (Quantum Technologies) at IIT Jodhpur. I run algorithms on real quantum hardware and chase the noise instead of averaging it away.*
->
-> - [x] **Power Grid QAOA** — QUBO on Rigetti Ankaa-3, Q-volution 2026 Best Overall
-> - [x] **IBM 156-qubit pipeline** — daily automated T1/T2, gate and readout characterization
-> - [x] **Nuclear astrophysics** — S-factor analysis for five α,n reactions
-> - [ ] **Lightning-Lite** — C++20 quantum simulator, validated against Qiskit Aer
-> * → I'm working actively on this currently (updated Oct 2026)
->
-> *Thanks for stopping by !*
+<a href="https://github.com/Athleity"><img src="./cards/hero.svg" width="100%" alt="Priyansh Bhavsar"/></a>
+<img src="./cards/stack.svg" width="100%" alt="Stack"/>
 
-<img src="./cards/general.svg" width="32%" alt="General"/> <img src="./cards/activity.svg" width="32%" alt="Activity"/> <img src="./cards/languages.svg" width="32%" alt="Languages"/>
-<img src="./cards/qaoa.svg" width="32%" alt="QAOA"/> <img src="./cards/simulator.svg" width="32%" alt="Lightning-Lite"/> <img src="./cards/astro.svg" width="32%" alt="Astrophysics"/>
+<img src="./cards/heatmap.svg" width="64%" alt="Contributions"/> <img src="./cards/streaks.svg" width="32%" alt="Activity"/>
+<a href="https://github.com/Athleity/GridIQ"><img src="./cards/gridiq.svg" width="24%" alt="GridIQ"/></a> <a href="https://github.com/Athleity/lightning-lite-quantum-simulator"><img src="./cards/lightning.svg" width="24%" alt="Lightning-Lite"/></a> <a href="https://github.com/Athleity/tox21-hybrid-quantum-model"><img src="./cards/tox21.svg" width="24%" alt="Tox21"/></a> <a href="https://github.com/Athleity/Quantum-entanglement-project"><img src="./cards/entangle.svg" width="24%" alt="Entanglement"/></a>
 
-<img src="./metrics.isocalendar.svg" width="100%" alt="Contribution skyline"/>
-
-These infographics were generated using a small script and [lowlighter/metrics](https://github.com/lowlighter/metrics)
-
-[LinkedIn](https://linkedin.com/in/priyansh-bhavsar-2b4b95260) · [Email](mailto:b22ph005@alumni.iitj.ac.in)
+<sub>[LinkedIn](https://linkedin.com/in/priyansh-bhavsar-2b4b95260) · [Email](mailto:b22ph005@alumni.iitj.ac.in)</sub>
