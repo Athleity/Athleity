@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="270" height="140" viewBox="0 0 270 140"><style>
+:root{--bg:#0d1117;--bd:#30363d;--fg:#e6edf3;--mu:#8b949e;--ac:#39d353;--ac2:#26a641}
+text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.bg{fill:var(--bg);stroke:var(--bd)}
+.trk{fill:var(--bd)}
+.t{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;font-weight:600;letter-spacing:.06em;fill:var(--fg)}
+.k2{font-size:11px;fill:var(--mu)}
+.v2{font-size:11px;font-weight:600;fill:var(--fg);text-anchor:end}
+.k{font-size:12px;fill:var(--mu)}
+.v{font-size:12px;font-weight:600;fill:var(--fg);text-anchor:end}
+.s{font-size:10px;fill:var(--mu)}
+.sub{font-size:13px;fill:var(--mu)}
+.big{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:26px;font-weight:700;fill:var(--ac)}
+.acc{fill:var(--ac)}
+.l0{fill:#161b22}
+.l1{fill:#0e4429}
+.l2{fill:#006d32}
+.l3{fill:#26a641}
+.l4{fill:#39d353}
+.eye{transform-box:fill-box;transform-origin:center;animation:blink 4s infinite}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+.live{fill:var(--ac2)}
+.in{animation:rise .6s ease-out both}
+.grow{transform-box:fill-box;transform-origin:left;animation:sweep 1.2s .4s ease-out both}
+.cell{animation:pop .5s ease-out both}
+.now,.dot{animation:pulse 1.6s ease-in-out infinite}
+.line{opacity:0;animation:cycle 16s infinite}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes sweep{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes pop{from{opacity:0}to{opacity:1}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes cycle{0%{opacity:0}4%,22%{opacity:1}26%,100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}.line{opacity:0}.line.f{opacity:1}}
+</style><rect class="bg" x=".5" y=".5" width="269" height="139" rx="10"/><g class="in" style="animation-delay:0.10s"><rect class="acc" x="18" y="16" width="7" height="7" rx="1.5"/><text class="t" x="31" y="24">ACTIVITY · 12 MONTHS</text><text class="k" x="18" y="54">Contributions</text><text class="v" x="252" y="54">163</text><text class="k" x="18" y="71">Commits</text><text class="v" x="252" y="71">146</text><text class="k" x="18" y="88">Pull requests</text><text class="v" x="252" y="88">2</text><text class="k" x="18" y="105">Current streak</text><text class="v" x="252" y="105">2 days</text><text class="k" x="18" y="122">Longest streak</text><text class="v" x="252" y="122">2 days</text></g></svg>

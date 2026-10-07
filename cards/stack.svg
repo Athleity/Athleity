@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="830" height="26" viewBox="0 0 830 26"><style>
+:root{--bg:#0d1117;--bd:#30363d;--fg:#e6edf3;--mu:#8b949e;--ac:#39d353;--ac2:#26a641}
+text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.bg{fill:var(--bg);stroke:var(--bd)}
+.trk{fill:var(--bd)}
+.t{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;font-weight:600;letter-spacing:.06em;fill:var(--fg)}
+.k2{font-size:11px;fill:var(--mu)}
+.v2{font-size:11px;font-weight:600;fill:var(--fg);text-anchor:end}
+.k{font-size:12px;fill:var(--mu)}
+.v{font-size:12px;font-weight:600;fill:var(--fg);text-anchor:end}
+.s{font-size:10px;fill:var(--mu)}
+.sub{font-size:13px;fill:var(--mu)}
+.big{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:26px;font-weight:700;fill:var(--ac)}
+.acc{fill:var(--ac)}
+.l0{fill:#161b22}
+.l1{fill:#0e4429}
+.l2{fill:#006d32}
+.l3{fill:#26a641}
+.l4{fill:#39d353}
+.eye{transform-box:fill-box;transform-origin:center;animation:blink 4s infinite}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+.live{fill:var(--ac2)}
+.in{animation:rise .6s ease-out both}
+.grow{transform-box:fill-box;transform-origin:left;animation:sweep 1.2s .4s ease-out both}
+.cell{animation:pop .5s ease-out both}
+.now,.dot{animation:pulse 1.6s ease-in-out infinite}
+.line{opacity:0;animation:cycle 16s infinite}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes sweep{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes pop{from{opacity:0}to{opacity:1}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes cycle{0%{opacity:0}4%,22%{opacity:1}26%,100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}.line{opacity:0}.line.f{opacity:1}}
+</style><defs><linearGradient id="f"><stop offset="0" stop-color="#000"/><stop offset=".08" stop-color="#fff"/><stop offset=".92" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient><mask id="m"><rect width="830" height="26" fill="url(#f)"/></mask></defs><rect class="bg" x=".5" y=".5" width="829" height="25" rx="8"/><g mask="url(#m)"><g><animateTransform attributeName="transform" type="translate" from="0 0" to="-1022 0" dur="45s" repeatCount="indefinite"/><text class="s mono" x="0" y="17" textLength="1022" lengthAdjust="spacing" style="font-size:12px">Python / C++20 / Qiskit / PennyLane / pyQuil / Cirq / QuTiP / Stim / NumPy / SciPy / OpenMP / CUDA / SIMD / pybind11 / PostgreSQL / PyTorch / </text><text class="s mono" x="1022" y="17" textLength="1022" lengthAdjust="spacing" style="font-size:12px">Python / C++20 / Qiskit / PennyLane / pyQuil / Cirq / QuTiP / Stim / NumPy / SciPy / OpenMP / CUDA / SIMD / pybind11 / PostgreSQL / PyTorch / </text></g></g><g><animateTransform attributeName="transform" type="translate" from="-44 2" to="830 2" dur="18s" repeatCount="indefinite"/><g><animateTransform attributeName="transform" type="translate" values="0 0;0 -1;0 0" dur=".5s" repeatCount="indefinite"/><line x1="10" y1="13" x2="10" y2="21" stroke="var(--ac)" stroke-width="2.4" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" values="-25 10 13;25 10 13;-25 10 13" dur=".5s" begin="0s" repeatCount="indefinite"/></line><line x1="14" y1="13" x2="14" y2="21" stroke="var(--ac)" stroke-width="2.4" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" values="-25 14 13;25 14 13;-25 14 13" dur=".5s" begin="-0.25s" repeatCount="indefinite"/></line><line x1="22" y1="13" x2="22" y2="21" stroke="var(--ac)" stroke-width="2.4" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" values="-25 22 13;25 22 13;-25 22 13" dur=".5s" begin="-0.25s" repeatCount="indefinite"/></line><line x1="26" y1="13" x2="26" y2="21" stroke="var(--ac)" stroke-width="2.4" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" values="-25 26 13;25 26 13;-25 26 13" dur=".5s" begin="0s" repeatCount="indefinite"/></line><path d="M8 8 C2 8 1 2 5 0" fill="none" stroke="var(--ac)" stroke-width="2.4" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" values="-12 8 8;14 8 8;-12 8 8" dur=".6s" repeatCount="indefinite"/></path><ellipse class="acc" cx="18" cy="10" rx="11" ry="5"/><circle class="acc" cx="31" cy="7" r="4.5"/><polygon class="acc" points="28,4 29,0 32,3"/><polygon class="acc" points="32,3 34,0 35,5"/><circle cx="33" cy="6.5" r=".9" fill="var(--bg)"/></g></g></svg>
